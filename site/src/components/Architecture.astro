@@ -1,0 +1,484 @@
+---
+// Architecture.astro - Architecture overview section
+interface Props {
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  title = "Architecture",
+  subtitle = "Clean separation of concerns with unidirectional dependencies. Each crate has a single responsibility."
+} = Astro.props;
+
+const crates = [
+  {
+    name: "a2a-warden-cli",
+    description: "Entry point, configuration loading, migrations on startup, signal handling",
+    dependencies: ["a2a-warden-server"],
+    color: "accent",
+    icon: "cli",
+  },
+  {
+    name: "a2a-warden-server",
+    description: "Axum router with A2A endpoints, admin API, embedded console (SPA)",
+    dependencies: ["a2a-warden-store", "a2a-warden-core"],
+    color: "cyan",
+    icon: "server",
+  },
+  {
+    name: "a2a-warden-store",
+    description: "sqlx implementations for SQLite & PostgreSQL, shared migrations",
+    dependencies: ["a2a-warden-core"],
+    color: "success",
+    icon: "database",
+  },
+  {
+    name: "a2a-warden-core",
+    description: "Domain types, storage traits, workflow rules, orchestration service",
+    dependencies: [],
+    color: "purple",
+    icon: "core",
+  },
+  {
+    name: "a2a-warden-crypto",
+    description: "JWS over JCS Agent Card verification, JWKS, token validation",
+    dependencies: ["a2a-warden-core"],
+    color: "warning",
+    icon: "shield",
+  },
+];
+
+// Icon SVG strings - defined as template literals to avoid frontmatter JSX parsing issues
+const icons = {
+  cli: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/><path d="M12 16V12m0 4h.01"/></svg>`,
+  server: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="6" y1="6" x2="18" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="18" x2="18" y2="18"/></svg>`,
+  database: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
+  core: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+  shield: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+};
+
+const techStack = [
+  { name: "Rust", version: "1.80+", category: "Language" },
+  { name: "Axum", version: "0.7+", category: "Web Framework" },
+  { name: "SQLx", version: "0.7+", category: "Database" },
+  { name: "Cedar", version: "latest", category: "Policy Engine" },
+  { name: "Tokio", version: "1.0+", category: "Async Runtime" },
+  { name: "Serde", version: "1.0+", category: "Serialization" },
+  { name: "Tower", version: "0.4+", category: "Middleware" },
+  { name: "Tracing", version: "0.1+", category: "Observability" },
+  { name: "Vite", version: "5.0+", category: "Frontend Build" },
+  { name: "TypeScript", version: "5.0+", category: "Frontend Language" },
+];
+---
+
+<section id="architecture" class="section" style="background: linear-gradient(180deg, transparent 0%, var(--color-bg-elevated) 50%, transparent 100%);" aria-labelledby="arch-title">
+  <div class="container">
+    <header class="section-header">
+      <span class="section-tag">Architecture</span>
+      <h2 id="arch-title" class="section-title">{title}</h2>
+      <p class="section-description">{subtitle}</p>
+    </header>
+    
+    <!-- Crate dependency diagram -->
+    <div class="arch-diagram" role="img" aria-label="A2A Warden crate dependency diagram showing unidirectional flow from CLI to Server to Store to Core, with Crypto as a side dependency">
+      <div class="arch-layers">
+        {crates.map((crate, index) => (
+          <div class="arch-layer" style="--layer-index: {index};" data-color="{crate.color}">
+            <div class="layer-header">
+              <div class="layer-icon" style="background: var(--color-{crate.color}-bg); color: var(--color-{crate.color}); border-color: var(--color-{crate.color}-border);" set:html={icons[crate.icon]} />
+              <div class="layer-info">
+                <h3 class="layer-name">{crate.name}</h3>
+                <p class="layer-desc">{crate.description}</p>
+              </div>
+            </div>
+            {crate.dependencies.length > 0 && (
+              <div class="layer-deps">
+                <span class="deps-label">Depends on:</span>
+                <ul class="deps-list">
+                  {crate.dependencies.map(dep => <li>{dep}</li>)}
+                </ul>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      
+      <!-- Dependency arrows -->
+      <div class="arch-arrows" aria-hidden="true">
+        <div class="arrow" style="--from: 0; --to: 1;"></div>
+        <div class="arrow" style="--from: 1; --to: 2;"></div>
+        <div class="arrow" style="--from: 2; --to: 3;"></div>
+        <div class="arrow side" style="--from: 4; --to: 3;"></div>
+      </div>
+    </div>
+    
+    <!-- Tech Stack -->
+    <div class="tech-stack" aria-labelledby="tech-title">
+      <h3 id="tech-title" class="tech-title">Technology Stack</h3>
+      <div class="grid grid--auto-sm" role="list">
+        {techStack.map((tech, index) => (
+          <div class="tech-card" role="listitem" style="animation-delay: {index * 50}ms">
+            <div class="tech-header">
+              <span class="tech-name">{tech.name}</span>
+              <span class="tech-version">{tech.version}</span>
+            </div>
+            <span class="tech-category">{tech.category}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Key Principles -->
+    <div class="principles" aria-labelledby="principles-title">
+      <h3 id="principles-title" class="principles-title">Design Principles</h3>
+      <div class="grid grid--3">
+        <div class="principle-card">
+          <div class="principle-icon" style="background: var(--color-accent-bg); color: var(--color-accent);" set:html={icons.shield} />
+          <h4>Unidirectional Dependencies</h4>
+          <p>cli → server → store → core. Core knows nothing about HTTP, SQL, or config.</p>
+        </div>
+        <div class="principle-card">
+          <div class="principle-icon" style="background: var(--color-success-bg); color: var(--color-success);" set:html={icons.database} />
+          <h4>Trait-Based Storage</h4>
+          <p>Store traits in core, implementations in store crate. Swap SQLite/PostgreSQL seamlessly.</p>
+        </div>
+        <div class="principle-card">
+          <div class="principle-icon" style="background: var(--color-purple-bg); color: var(--color-purple);" set:html={icons.core} />
+          <h4>Single Binary</h4>
+          <p>Frontend compiled into binary. No external Node server, no separate deployment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .arch-diagram {
+    position: relative;
+    margin-bottom: var(--space-4xl);
+  }
+  
+  .arch-layers {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    position: relative;
+    z-index: 2;
+  }
+  
+  .arch-layer {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    position: relative;
+    transition: all var(--transition-base);
+  }
+  
+  .arch-layer:hover {
+    border-color: var(--color-border-light);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(8px);
+  }
+  
+  .arch-layer::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    background: var(--color-accent);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+  
+  .arch-layer[data-color="accent"]::before { background: var(--color-accent); }
+  .arch-layer[data-color="cyan"]::before { background: var(--color-cyan); }
+  .arch-layer[data-color="success"]::before { background: var(--color-success); }
+  .arch-layer[data-color="purple"]::before { background: var(--color-purple); }
+  .arch-layer[data-color="warning"]::before { background: var(--color-warning); }
+  
+  .arch-layer:hover::before {
+    opacity: 1;
+  }
+  
+  .layer-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+  
+  .layer-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+    border: 1px solid;
+  }
+  
+  .layer-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .layer-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .layer-name {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+    font-family: var(--font-mono);
+  }
+  
+  .layer-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+  
+  .layer-deps {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .deps-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    display: block;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .deps-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .deps-list li {
+    font-size: 0.8125rem;
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+    background: var(--color-accent-bg);
+    border: 1px solid var(--color-accent-border);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    margin: 0;
+  }
+  
+  .arch-arrows {
+    position: absolute;
+    right: -30px;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .arrow {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  
+  .arrow::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-border), var(--color-accent));
+    border-radius: 1px;
+  }
+  
+  .arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-left-color: var(--color-accent);
+    margin-right: -2px;
+  }
+  
+  .arrow.side {
+    flex: 1;
+    align-items: flex-start;
+  }
+  
+  .arrow.side::before {
+    width: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-border), var(--color-warning));
+  }
+  
+  .arrow.side::after {
+    border-left-color: var(--color-warning);
+  }
+  
+  /* Tech Stack */
+  .tech-stack {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-3xl);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .tech-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xl);
+    text-align: center;
+  }
+  
+  .tech-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    text-align: center;
+    transition: all var(--transition-base);
+  }
+  
+  .tech-card:hover {
+    border-color: var(--color-accent-border);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .tech-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+  }
+  
+  .tech-name {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  
+  .tech-version {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    background: var(--color-accent-bg);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-accent-border);
+  }
+  
+  .tech-category {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  /* Principles */
+  .principles {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-3xl);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .principles-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xl);
+    text-align: center;
+  }
+  
+  .principle-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    text-align: center;
+    transition: all var(--transition-base);
+  }
+  
+  .principle-card:hover {
+    border-color: var(--color-border-light);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .principle-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+    border: 1px solid;
+  }
+  
+  .principle-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .principle-card h4 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+  }
+  
+  .principle-card p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  @media (max-width: 1024px) {
+    .arch-arrows {
+      display: none;
+    }
+    
+    .arch-layer:hover {
+      transform: none;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .layer-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+    
+    .layer-icon {
+      width: 40px;
+      height: 40px;
+    }
+  }
+</style>

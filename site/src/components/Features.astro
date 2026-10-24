@@ -1,0 +1,144 @@
+---
+// Features.astro - Feature cards section
+interface Props {
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  title = "Core Capabilities",
+  subtitle = "Built for production agent communication with security, observability, and human oversight at its core."
+} = Astro.props;
+
+const features = [
+  {
+    icon: 'a2a-hub',
+    title: "A2A Hub & Protocol Compliance",
+    description: "Full JSON-RPC 2.0 endpoint with POST / and GET /.well-known/agent-card.json. Message replay and resend with correct message_id preservation. Complete A2A v1.0 specification support.",
+    tags: ["A2A v1.0", "JSON-RPC", "Replay"],
+    color: "accent",
+  },
+  {
+    icon: 'live-traffic',
+    title: "Live Traffic Feed",
+    description: "Real-time event stream with full UUID, JSON payload, and timestamp display. Feed activates only on user action (Start button) to minimize overhead. Server-sent events (SSE) for efficient streaming.",
+    tags: ["SSE", "Real-time", "UUID"],
+    color: "success",
+  },
+  {
+    icon: 'audit-log',
+    title: "Hash-Chained Audit Trail",
+    description: "Every state transition recorded in an append-only hash chain. Paginated export (/audit/export) with 25 entries per page, descending by date. Chain verification endpoint for forensic integrity proofs.",
+    tags: ["Hash Chain", "Integrity", "Forensics"],
+    color: "purple",
+  },
+  {
+    icon: 'task-mgmt',
+    title: "Task Management & Approvals",
+    description: "Server-side pagination (offset/limit 25), status filtering, debounced search (~300ms) with preserved input. Approvals workflow with status filter, pagination, and total counts. Human-in-the-loop decisions.",
+    tags: ["Pagination", "Search", "HITL"],
+    color: "cyan",
+  },
+  {
+    icon: 'cedar-policy',
+    title: "Cedar Policy Engine",
+    description: "Deny-by-default with skill-level gating. Rules target agent, skill, content, or tenant. Environment variable overrides (A2AWARDEN_*). Effects: allow, deny, escalate. Policy versioning with created_at timestamps.",
+    tags: ["Cedar", "Deny-by-default", "Skills"],
+    color: "warning",
+  },
+  {
+    icon: 'embedded-ui',
+    title: "Embedded Web Console",
+    description: "Zero-dependency TypeScript SPA compiled into the binary. Accessible at /ui with tabs for Tasks, Approvals, Traffic, Audit, and Search. No separate Node.js server required. Responsive design.",
+    tags: ["SPA", "No Node", "TypeScript"],
+    color: "danger",
+  },
+  {
+    icon: 'crypto',
+    title: "Cryptographic Verification",
+    description: "Signed Agent Cards verified via JWS over JCS (JSON Canonicalization Scheme). Token-guarded admin API. JWKS endpoint for key rotation. Phase 3 crypto implementation.",
+    tags: ["JWS/JCS", "JWKS", "Tokens"],
+    color: "accent",
+  },
+  {
+    icon: 'deployment',
+    title: "Flexible Deployment",
+    description: "SQLite (no server) or PostgreSQL. Pinned Rust toolchain via rust-toolchain.toml. Configurable listen address. Environment variable configuration override. Example agents and pizza-shop demo included.",
+    tags: ["SQLite", "PostgreSQL", "Docker-ready"],
+    color: "success",
+  },
+];
+
+// Icon SVG strings - defined as template literals to avoid frontmatter JSX parsing issues
+const icons = {
+  'a2a-hub': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><path d="M10 6.5v11M6.5 10h11"/></svg>`,
+  'live-traffic': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
+  'audit-log': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
+  'task-mgmt': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
+  'cedar-policy': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>`,
+  'embedded-ui': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
+  'crypto': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+  'deployment': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4M2 9h20M2 14h20"/></svg>`,
+};
+---
+
+<section id="features" class="section" aria-labelledby="features-title">
+  <div class="container">
+    <header class="section-header">
+      <span class="section-tag">Features</span>
+      <h2 id="features-title" class="section-title">{title}</h2>
+      <p class="section-description">{subtitle}</p>
+    </header>
+    
+    <div class="grid grid--auto" role="list">
+      {features.map((feature, index) => (
+        <article class="card" role="listitem" style="animation-delay: {index * 100}ms">
+          <div class="card-icon" style="background: var(--color-{feature.color}-bg); color: var(--color-{feature.color}); border: 1px solid var(--color-{feature.color}-border);" set:html={icons[feature.icon]} />
+          <h3 class="card-title">{feature.title}</h3>
+          <p class="card-description">{feature.description}</p>
+          <div class="card-tags" style="margin-top: var(--space-lg); display: flex; flex-wrap: wrap; gap: var(--space-sm);">
+            {feature.tags.map(tag => (
+              <span class="badge badge--neutral">{tag}</span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+  }
+  
+  .card-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+  }
+  
+  .card-description {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    margin-bottom: var(--space-lg);
+  }
+  
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+</style>

@@ -1,0 +1,83 @@
+---
+// Layout.astro - Base layout for all pages
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description = "A2A Warden - Trusted intermediary for Agent2Agent communication", ogImage = "/og-image.png" } = Astro.props;
+const site = Astro.site || new URL("https://a2a-warden.dev");
+const canonicalURL = new URL(Astro.url.pathname, site);
+const ogImageURL = new URL(ogImage, site);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+  <link rel="canonical" href={canonicalURL} />
+  
+  <!-- Primary Meta Tags -->
+  <title>{title}</title>
+  <meta name="title" content={title} />
+  <meta name="description" content={description} />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImageURL} />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={canonicalURL} />
+  <meta property="twitter:title" content={title} />
+  <meta property="twitter:description" content={description} />
+  <meta property="twitter:image" content={ogImageURL} />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "A2A Warden",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Linux, macOS, Windows",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "Trusted hub-and-spoke intermediary for Agent2Agent (A2A) communication. Records traffic, verifies signed Agent Cards, applies Cedar policies, enables human supervision.",
+    "url": "https://github.com/the-cygnusdev/a2a-warden",
+    "license": "https://www.apache.org/licenses/LICENSE-2.0",
+    "programmingLanguage": "Rust",
+    "codeRepository": "https://github.com/the-cygnusdev/a2a-warden"
+  })} />
+</head>
+<body>
+  <slot />
+  
+  <!-- Global scroll restoration -->
+  <script is:inline>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+  </script>
+</body>
+</html>

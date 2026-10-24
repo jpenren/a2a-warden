@@ -1,0 +1,419 @@
+---
+// QuickStart.astro - Quick start section with installation and screenshots
+interface Props {
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  title = "Quick Start",
+  subtitle = "Get A2A Warden running in minutes. Single binary, zero external dependencies."
+} = Astro.props;
+
+const steps = [
+  {
+    number: 1,
+    title: "Build the Binary",
+    description: "Clone the repository and build with Cargo. The Rust toolchain is pinned for reproducibility.",
+    code: `git clone https://github.com/the-cygnusdev/a2a-warden.git
+cd a2a-warden
+cargo build --release`,
+    terminal: true,
+  },
+  {
+    number: 2,
+    title: "Start a Remote Agent",
+    description: "Launch the example Python echo agent on port 9001. This simulates an A2A-compatible agent.",
+    code: `python3 examples/sample-agents/echo-python/echo_agent.py --port 9001`,
+    terminal: true,
+  },
+  {
+    number: 3,
+    title: "Run A2A Warden",
+    description: "Start the Warden with the SQLite config. It will listen on port 8080 and connect to the echo agent.",
+    code: `./target/release/a2a-warden --config examples/config/sqlite.yaml`,
+    terminal: true,
+  },
+  {
+    number: 4,
+    title: "Open the Console",
+    description: "Navigate to the embedded web console to see tasks, approvals, live traffic, and audit logs.",
+    code: `open http://127.0.0.1:8080/ui`,
+    terminal: false,
+  },
+];
+
+const screenshots = [
+  { src: "/assets/tasks.png", alt: "Task list with pagination, status filters, and search", caption: "Task List — Pagination, filters, and debounced search" },
+  { src: "/assets/task-details.png", alt: "Task details view with timeline and actions", caption: "Task Details — Timeline, actions, and metadata" },
+  { src: "/assets/task-completed-details.png", alt: "Completed task with audit trail", caption: "Completed Task — Full audit trail and results" },
+];
+
+const endpoints = [
+  { path: "/ui", label: "Web Console", desc: "Tasks, approvals, traffic, audit, search" },
+  { path: "/api/v1/admin", label: "Admin API", desc: "Approvals, policies, agents, audit export" },
+  { path: "/", label: "A2A JSON-RPC", desc: "POST endpoint for agent communication" },
+  { path: "/.well-known/agent-card.json", label: "Agent Card", desc: "Signed Agent Card (JWS/JCS)" },
+];
+
+const demoCode = `# Send a task (waits for approval due to deny-by-default policy)
+python3 examples/sample-agents/client-python/client_python.py \
+  --warden http://127.0.0.1:8080 --text "hello from the demo"
+
+# Get pending approval ID
+APPROVAL=$(curl -s "http://127.0.0.1:8080/api/v1/admin/approvals?status=pending" \
+  | python3 -c "import json,sys; print(json.load(sys.stdin)['approvals'][0]['id'])")
+
+# Approve the task
+curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision" \
+  -H 'content-type: application/json' \
+  -d '{"decision": "approve", "approver": "demo-user", "reason": "looks fine"}'`;
+---
+
+<section id="quickstart" class="section" aria-labelledby="qs-title">
+  <div class="container">
+    <header class="section-header">
+      <span class="section-tag">Get Started</span>
+      <h2 id="qs-title" class="section-title">{title}</h2>
+      <p class="section-description">{subtitle}</p>
+    </header>
+    
+    <!-- Steps -->
+    <div class="steps" aria-label="Installation steps">
+      {steps.map((step, index) => (
+        <article class="step" style="animation-delay: {index * 150}ms">
+          <div class="step-number">{step.number}</div>
+          <div class="step-content">
+            <h3 class="step-title">{step.title}</h3>
+            <p class="step-desc">{step.description}</p>
+            <div class="code-block" data-lang={step.terminal ? "bash" : "text"}>
+              <pre><code>{step.code}</code></pre>
+              <button class="copy-btn" aria-label="Copy command" data-code={step.code}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+    
+    <!-- Screenshots -->
+    <div class="screenshots-section" aria-labelledby="screenshots-title">
+      <h3 id="screenshots-title" class="screenshots-title">Embedded Web Console</h3>
+      <div class="screenshots-grid" role="list">
+        {screenshots.map((shot, index) => (
+          <figure class="screenshot-card" role="listitem" style="animation-delay: {index * 100}ms">
+            <div class="screenshot-frame">
+              <img src={shot.src} alt={shot.alt} loading="lazy" />
+            </div>
+            <figcaption>{shot.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Endpoints -->
+    <div class="endpoints-section" aria-labelledby="endpoints-title">
+      <h3 id="endpoints-title" class="endpoints-title">Available Endpoints</h3>
+      <p class="endpoints-desc">Once running, the Warden exposes these endpoints on the configured address (default: <code class="inline-code">http://127.0.0.1:8080</code>).</p>
+      <div class="grid grid--auto-sm">
+        {endpoints.map(ep => (
+          <div class="endpoint-card">
+            <div class="endpoint-path">{ep.path}</div>
+            <div class="endpoint-label">{ep.label}</div>
+            <div class="endpoint-desc">{ep.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Demo -->
+    <div class="demo-section" aria-labelledby="demo-title">
+      <h3 id="demo-title" class="demo-title">Try the Demo</h3>
+      <p class="demo-desc">Send a test task and approve it via the admin API:</p>
+      <div class="code-block" data-lang="bash">
+        <pre><code>{`# Send a task (waits for approval due to deny-by-default policy)
+python3 examples/sample-agents/client-python/client_python.py \
+  --warden http://127.0.0.1:8080 --text "hello from the demo"
+
+# Get pending approval ID
+APPROVAL=$(curl -s "http://127.0.0.1:8080/api/v1/admin/approvals?status=pending" \
+  | python3 -c "import json,sys; print(json.load(sys.stdin)['approvals'][0]['id'])")
+
+# Approve the task
+curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision" \
+  -H 'content-type: application/json' \
+  -d '{"decision": "approve", "approver": "demo-user", "reason": "looks fine"}'`}</code></pre>
+        <button class="copy-btn" aria-label="Copy demo commands" data-code={demoCode}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-4xl);
+  }
+  
+  .step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+  
+  .step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-purple) 100%);
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-md), var(--shadow-glow);
+  }
+  
+  .step-content {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+  }
+  
+  .step-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+  }
+  
+  .step-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+  }
+  
+  .step .code-block {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  
+  .step .code-block pre {
+    padding: var(--space-md);
+  }
+  
+  .step .copy-btn {
+    top: var(--space-sm);
+    right: var(--space-sm);
+    padding: var(--space-xs);
+  }
+  
+  /* Screenshots */
+  .screenshots-section {
+    margin-bottom: var(--space-4xl);
+    padding-top: var(--space-3xl);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .screenshots-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+  
+  .screenshots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+  
+  .screenshot-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-base);
+  }
+  
+  .screenshot-card:hover {
+    border-color: var(--color-border-light);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .screenshot-frame {
+    aspect-ratio: 16 / 10;
+    background: var(--color-bg);
+    overflow: hidden;
+  }
+  
+  .screenshot-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+  
+  .screenshot-card:hover .screenshot-frame img {
+    transform: scale(1.02);
+  }
+  
+  .screenshot-card figcaption {
+    padding: var(--space-md);
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    background: var(--color-bg-elevated);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  /* Endpoints */
+  .endpoints-section {
+    margin-bottom: var(--space-4xl);
+    padding-top: var(--space-3xl);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .endpoints-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: center;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .endpoints-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .endpoint-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    text-align: center;
+    transition: all var(--transition-base);
+  }
+  
+  .endpoint-card:hover {
+    border-color: var(--color-accent-border);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .endpoint-path {
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: var(--space-xs);
+  }
+  
+  .endpoint-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+  }
+  
+  .endpoint-desc {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  
+  /* Demo */
+  .demo-section {
+    padding-top: var(--space-3xl);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .demo-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: center;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .demo-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+  
+  .demo-section .code-block {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  
+  .demo-section .code-block pre {
+    padding: var(--space-xl);
+  }
+  
+  .demo-section .copy-btn {
+    top: var(--space-md);
+    right: var(--space-md);
+  }
+  
+  @media (max-width: 900px) {
+    .screenshots-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .step {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+    
+    .step-number {
+      width: 40px;
+      height: 40px;
+      font-size: 1.25rem;
+    }
+  }
+</style>
+
+<script>
+  // Copy buttons
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.dataset.code;
+      try {
+        await navigator.clipboard.writeText(code);
+        const svg = btn.querySelector('svg');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+        btn.style.color = 'var(--color-success)';
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.style.color = '';
+        }, 1500);
+      } catch (e) {
+        console.error('Failed to copy:', e);
+      }
+    });
+  });
+</script>

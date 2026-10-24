@@ -1,0 +1,288 @@
+---
+// Footer.astro - Site footer with links and info
+interface Props {
+  tagline?: string;
+}
+
+const { tagline = "See every message. Verify every agent. Approve every task." } = Astro.props;
+
+const currentYear = new Date().getFullYear();
+
+const links = {
+  product: [
+    { label: "Features", href: "#features" },
+    { label: "Architecture", href: "#architecture" },
+    { label: "Use Cases", href: "#use-cases" },
+    { label: "Configuration", href: "#configuration" },
+  ],
+  resources: [
+    { label: "Documentation", href: "https://github.com/the-cygnusdev/a2a-warden/tree/main/docs" },
+    { label: "GitHub Repository", href: "https://github.com/the-cygnusdev/a2a-warden" },
+    { label: "Issues", href: "https://github.com/the-cygnusdev/a2a-warden/issues" },
+    { label: "Releases", href: "https://github.com/the-cygnusdev/a2a-warden/releases" },
+  ],
+  community: [
+    { label: "Contributing", href: "https://github.com/the-cygnusdev/a2a-warden/blob/main/CONTRIBUTING.md" },
+    { label: "License (Apache 2.0)", href: "https://github.com/the-cygnusdev/a2a-warden/blob/main/LICENSE" },
+    { label: "Security Policy", href: "https://github.com/the-cygnusdev/a2a-warden/security/policy" },
+  ],
+  examples: [
+    { label: "Echo Agent", href: "https://github.com/the-cygnusdev/a2a-warden/tree/main/examples/sample-agents/echo-python" },
+    { label: "Pizza Shop Demo", href: "https://github.com/the-cygnusdev/a2a-warden/tree/main/examples/pizza-shop" },
+    { label: "Configuration Files", href: "https://github.com/the-cygnusdev/a2a-warden/tree/main/examples/config" },
+  ],
+};
+---
+
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <svg width="32" height="32" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M50.4 78.5a75.1 75.1 0 0 0-28.5 6.9l24.2-65.7c.7-2 1.9-3.2 3.4-3.2h29c1.5 0 2.7 1.2 3.4 3.2l24.2 65.7s-11.6-7-28.5-7L67 45.5c-.4-1.7-1.6-2.8-2.9-2.8-1.3 0-2.5 1.1-2.9 2.7L50.4 78.5Zm-1.1 28.2Zm-4.2-20.2c-2 6.6-.6 15.8 4.2 20.2a17.5 17.5 0 0 1 .2-.7 5.5 5.5 0 0 1 5.7-4.5c2.8.1 4.3 1.5 4.7 4.7.2 1.1.2 2.3.2 3.5v.4c0 2.7.7 5.2 2.2 7.4a13 13 0 0 0 5.7 4.9v-.3l-.2-.3c-1.8-5.6-.5-9.5 4.4-12.8l1.5-1a73 73 0 0 0 3.2-2.2 16 16 0 0 0 6.8-11.4c.3-2 .1-4-.6-6l-.8.6-1.6 1a37 37 0 0 1-22.4 2.7c-5-.7-9.7-2-13.2-6.2Z" fill="var(--color-accent)"/>
+          </svg>
+          <span class="footer-name">A2A Warden</span>
+        </div>
+        <p class="footer-tagline">{tagline}</p>
+        <p class="footer-desc">Open source Rust component for trusted Agent2Agent communication. Built with security, observability, and human oversight at its core.</p>
+        <div class="footer-badges">
+          <a href="https://github.com/the-cygnusdev/a2a-warden" target="_blank" rel="noopener noreferrer" class="badge-link" aria-label="GitHub Stars">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.305-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a href="https://github.com/the-cygnusdev/a2a-warden/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="badge-link" aria-label="Apache 2.0 License">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Apache 2.0</span>
+          </a>
+          <a href="https://github.com/the-cygnusdev/a2a-warden/releases" target="_blank" rel="noopener noreferrer" class="badge-link" aria-label="Latest Release">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M12 5a2 2 0 0 1-2 2M12 5a2 2 0 0 0 2 2"/><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/></svg>
+            <span>Releases</span>
+          </a>
+        </div>
+      </div>
+      
+      <nav class="footer-nav" aria-label="Product links">
+        <h4 class="footer-heading">Product</h4>
+        <ul class="footer-links">
+          {links.product.map(link => <li><a href={link.href}>{link.label}</a></li>)}
+        </ul>
+      </nav>
+      
+      <nav class="footer-nav" aria-label="Resources">
+        <h4 class="footer-heading">Resources</h4>
+        <ul class="footer-links">
+          {links.resources.map(link => <li><a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a></li>)}
+        </ul>
+      </nav>
+      
+      <nav class="footer-nav" aria-label="Community">
+        <h4 class="footer-heading">Community</h4>
+        <ul class="footer-links">
+          {links.community.map(link => <li><a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a></li>)}
+        </ul>
+      </nav>
+      
+      <nav class="footer-nav" aria-label="Examples">
+        <h4 class="footer-heading">Examples</h4>
+        <ul class="footer-links">
+          {links.examples.map(link => <li><a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="footer-copyright">
+        <p>&copy; {currentYear} A2A Warden. Licensed under Apache 2.0.</p>
+      </div>
+      <div class="footer-social">
+        <a href="https://github.com/the-cygnusdev/a2a-warden" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.305-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://github.com/the-cygnusdev/a2a-warden/discussions" target="_blank" rel="noopener noreferrer" aria-label="Discussions">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-bg-elevated);
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-4xl) 0 var(--space-xl);
+    margin-top: var(--space-4xl);
+  }
+  
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr repeat(4, 1fr);
+    gap: var(--space-2xl);
+    margin-bottom: var(--space-3xl);
+  }
+  
+  .footer-brand {
+    max-width: 320px;
+  }
+  
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+  
+  .footer-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+  }
+  
+  .footer-tagline {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    margin-bottom: var(--space-md);
+    font-style: italic;
+  }
+  
+  .footer-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+  }
+  
+  .footer-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+  
+  .badge-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+  
+  .badge-link:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent-border);
+    background: var(--color-accent-bg);
+    text-decoration: none;
+  }
+  
+  .footer-nav h4 {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+  }
+  
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .footer-links a {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  
+  .footer-links a:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .footer-copyright p {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  
+  .footer-social {
+    display: flex;
+    gap: var(--space-md);
+  }
+  
+  .footer-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: var(--color-text-muted);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+  
+  .footer-social a:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent-border);
+    background: var(--color-accent-bg);
+    transform: translateY(-2px);
+  }
+  
+  @media (max-width: 1024px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+    }
+    
+    .footer-brand {
+      grid-column: span 2;
+      max-width: none;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .footer-brand {
+      grid-column: span 1;
+    }
+    
+    .footer-bottom {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .footer-social {
+      justify-content: center;
+    }
+  }
+</style>

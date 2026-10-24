@@ -1,9 +1,9 @@
 {
-  "name": "--typescript",
+  "name": "a2a-warden-site",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
-    "node": ">=22.23.4"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "dev": "astro dev",

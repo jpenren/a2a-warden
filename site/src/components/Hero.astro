@@ -1,0 +1,332 @@
+---
+// Hero.astro - Hero section with value proposition, CTAs, and key metrics
+interface Props {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+}
+
+const {
+  title = "A2A Warden",
+  subtitle = "Trusted intermediary for Agent2Agent communication",
+  description = "Hub-and-spoke architecture that records all traffic, verifies signed Agent Cards (JWS/JCS), applies Cedar policies with deny-by-default, and enables human-in-the-loop approvals — all in a single Rust executable."
+} = Astro.props;
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container">
+    <!-- Background glow effect -->
+    <div class="hero-glow" aria-hidden="true"></div>
+    
+    <header class="hero-header">
+      <div class="hero-badge" data-animate="fade-in-up">
+        <span class="badge badge--accent">A2A v1.0 Compatible</span>
+        <span class="badge badge--success">Open Source</span>
+        <span class="badge badge--purple">Rust</span>
+      </div>
+      
+      <h1 id="hero-title" class="hero-title" data-animate="fade-in-up" style="animation-delay: 100ms;">
+        <span class="hero-title-main">{title}</span>
+        <span class="hero-title-sub">{subtitle}</span>
+      </h1>
+      
+      <p class="hero-description" data-animate="fade-in-up" style="animation-delay: 200ms;">
+        {description}
+      </p>
+      
+      <div class="hero-cta" data-animate="fade-in-up" style="animation-delay: 300ms;">
+        <a href="#quickstart" class="btn btn--primary btn--lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Get Started
+        </a>
+        <a href="https://github.com/the-cygnusdev/a2a-warden" target="_blank" rel="noopener noreferrer" class="btn btn--secondary btn--lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.305-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+      
+      <!-- Key Metrics -->
+      <div class="hero-metrics" data-animate="fade-in-up" style="animation-delay: 400ms;" role="list" aria-label="Key metrics">
+        <div class="metric" role="listitem">
+          <span class="metric-value">1</span>
+          <span class="metric-label">Single Binary</span>
+        </div>
+        <div class="metric-divider" aria-hidden="true"></div>
+        <div class="metric" role="listitem">
+          <span class="metric-value">0</span>
+          <span class="metric-label">External Deps</span>
+        </div>
+        <div class="metric-divider" aria-hidden="true"></div>
+        <div class="metric" role="listitem">
+          <span class="metric-value">2</span>
+          <span class="metric-label">DB Backends</span>
+        </div>
+        <div class="metric-divider" aria-hidden="true"></div>
+        <div class="metric" role="listitem">
+          <span class="metric-value">100%</span>
+          <span class="metric-label">Type Safe</span>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Architecture Preview -->
+    <div class="hero-arch" data-animate="fade-in-up" style="animation-delay: 500ms;" role="img" aria-label="A2A Warden architecture: Agent A and Agent B communicate through the Warden hub which records, verifies, applies policies, and enables human approval">
+      <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" class="hero-arch-svg">
+        <defs>
+          <marker id="arrow-right" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 Z" fill="var(--color-accent)" />
+          </marker>
+          <marker id="arrow-right-green" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 Z" fill="var(--color-success)" />
+          </marker>
+          <marker id="arrow-right-orange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 Z" fill="var(--color-warning)" />
+          </marker>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <linearGradient id="grad-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:var(--color-accent)"/>
+            <stop offset="100%" style="stop-color:var(--color-purple)"/>
+          </linearGradient>
+        </defs>
+        
+        <!-- Agent A -->
+        <g class="arch-agent" style="transform: translate(60px, 60px)">
+          <rect x="0" y="0" width="140" height="160" rx="16" fill="var(--color-bg-card)" stroke="var(--color-accent)" stroke-width="2" filter="url(#glow)"/>
+          <rect x="0" y="0" width="140" height="48" rx="16" fill="var(--color-accent-bg)"/>
+          <text x="70" y="30" text-anchor="middle" font-family="var(--font-sans)" font-size="14" font-weight="600" fill="var(--color-accent)">Agent A</text>
+          <text x="70" y="55" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--color-text-muted)">Python SDK</text>
+          
+          <g style="transform: translate(16px, 70px)">
+            <rect x="0" y="0" width="108" height="36" rx="8" fill="var(--color-bg)" stroke="var(--color-border)" stroke-width="1"/>
+            <text x="54" y="22" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">createTask()</text>
+          </g>
+          
+          <g style="transform: translate(16px, 115px)">
+            <rect x="0" y="0" width="108" height="36" rx="8" fill="var(--color-bg)" stroke="var(--color-border)" stroke-width="1"/>
+            <text x="54" y="22" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-secondary)">getTaskStatus()</text>
+          </g>
+        </g>
+        
+        <!-- Warden Hub -->
+        <g class="arch-warden" style="transform: translate(260px, 20px)">
+          <rect x="0" y="0" width="280" height="240" rx="20" fill="var(--color-bg-card)" stroke="url(#grad-accent)" stroke-width="2" filter="url(#glow)"/>
+          <rect x="0" y="0" width="280" height="56" rx="20" fill="var(--color-accent-bg)"/>
+          <text x="140" y="34" text-anchor="middle" font-family="var(--font-sans)" font-size="16" font-weight="700" fill="var(--color-accent)">A2A Warden</text>
+          
+          <!-- Components inside warden -->
+          <g style="transform: translate(20px, 70px)">
+            <rect x="0" y="0" width="110" height="70" rx="10" fill="var(--color-bg)" stroke="var(--color-border)" stroke-width="1"/>
+            <text x="55" y="22" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="var(--color-text)">A2A Hub</text>
+            <text x="55" y="40" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">JSON-RPC</text>
+            <text x="55" y="55" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">/.well-known/agent-card.json</text>
+          </g>
+          
+          <g style="transform: translate(150px, 70px)">
+            <rect x="0" y="0" width="110" height="70" rx="10" fill="var(--color-bg)" stroke="var(--color-border)" stroke-width="1"/>
+            <text x="55" y="22" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="var(--color-success)">Policy</text>
+            <text x="55" y="40" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">Cedar Engine</text>
+            <text x="55" y="55" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">deny-by-default</text>
+          </g>
+          
+          <g style="transform: translate(20px, 150px)">
+            <rect x="0" y="0" width="110" height="70" rx="10" fill="var(--color-bg)" stroke="var(--color-border)" stroke-width="1"/>
+            <text x="55" y="22" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="var(--color-warning)">Approvals</text>
+            <text x="55" y="40" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">Human-in-the-loop</text>
+            <text x="55" y="55" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">/api/v1/admin/approvals</text>
+          </g>
+          
+          <g style="transform: translate(150px, 150px)">
+            <rect x="0" y="0" width="110" height="70" rx="10" fill="var(--color-bg)" stroke="var(--color-border)" stroke-width="1"/>
+            <text x="55" y="22" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="var(--color-cyan)">Audit</text>
+            <text x="55" y="40" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">Hash-chained log</text>
+            <text x="55" y="55" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">/audit/export</text>
+          </g>
+        </g>
+        
+        <!-- Agent B -->
+        <g class="arch-agent" style="transform: translate(580px, 60px)">
+          <rect x="0" y="0" width="140" height="160" rx="16" fill="var(--color-bg-card)" stroke="var(--color-success)" stroke-width="2" filter="url(#glow)"/>
+          <rect x="0" y="0" width="140" height="48" rx="16" fill="var(--color-success-bg)"/>
+          <text x="70" y="30" text-anchor="middle" font-family="var(--font-sans)" font-size="14" font-weight="600" fill="var(--color-success)">Agent B</text>
+          <text x="70" y="55" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--color-text-muted)">Rust SDK</text>
+          
+          <g style="transform: translate(16px, 70px)">
+            <rect x="0" y="0" width="108" height="36" rx="8" fill="var(--color-bg)" stroke="var(--color-border)" stroke-width="1"/>
+            <text x="54" y="22" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">handleTask()</text>
+          </g>
+          
+          <g style="transform: translate(16px, 115px)">
+            <rect x="0" y="0" width="108" height="36" rx="8" fill="var(--color-bg)" stroke="var(--color-border)" stroke-width="1"/>
+            <text x="54" y="22" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-secondary)">TaskStatusUpdate</text>
+          </g>
+        </g>
+        
+        <!-- Arrows -->
+        <path d="M200 140 Q230 140 260 140" fill="none" stroke="var(--color-accent)" stroke-width="2.5" marker-end="url(#arrow-right)" style="filter: url(#glow)"/>
+        <path d="M540 140 Q570 140 580 140" fill="none" stroke="var(--color-success)" stroke-width="2.5" marker-end="url(#arrow-right-green)" style="filter: url(#glow)"/>
+        
+        <!-- Approval flow indicator -->
+        <g style="transform: translate(320px, 20px)" opacity="0.8">
+          <path d="M140 20 Q140 -10 200 -10 Q260 -10 260 20" fill="none" stroke="var(--color-warning)" stroke-width="2" stroke-dasharray="8 4" marker-end="url(#arrow-right-orange)"/>
+          <text x="200" y="-18" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-warning)">Escalated → Human Approval</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding: calc(var(--space-4xl) + var(--header-height)) 0 var(--space-4xl);
+    overflow: hidden;
+  }
+  
+  .hero-glow {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, var(--color-accent-bg) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .hero-header {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto var(--space-4xl);
+  }
+  
+  .hero-badge {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+    margin-bottom: var(--space-lg);
+  }
+  
+  .hero-title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+  
+  .hero-title-main {
+    color: var(--color-text);
+    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .hero-title-sub {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    background: none;
+    -webkit-text-fill-color: initial;
+  }
+  
+  .hero-description {
+    font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  
+  .hero-cta {
+    margin-top: var(--space-2xl);
+  }
+  
+  .hero-metrics {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-2xl);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  
+  .metric-value {
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  
+  .metric-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .metric-divider {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, transparent, var(--color-border), transparent);
+  }
+  
+  .hero-arch {
+    max-width: 100%;
+    overflow-x: auto;
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  }
+  
+  .hero-arch-svg {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .hero-arch-svg {
+      max-width: 100%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .hero {
+      padding-top: calc(var(--space-3xl) + var(--header-height));
+    }
+    
+    .hero-metrics {
+      gap: var(--space-lg);
+    }
+    
+    .metric-divider {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,603 @@
+---
+// Configuration.astro - Configuration examples section
+interface Props {
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  title = "Configuration",
+  subtitle = "YAML configuration with environment variable overrides. All keys prefixed with A2AWARDEN_."
+} = Astro.props;
+
+const configs = [
+  {
+    id: "sqlite",
+    title: "SQLite (Development)",
+    description: "Zero-configuration local development with file-based database.",
+    filename: "sqlite.yaml",
+    code: `server:
+  listen_addr: "0.0.0.0:8080"
+
+database:
+  backend: sqlite
+  sqlite:
+    path: "./a2a-warden.db"
+
+agents:
+  - name: "echo-agent"
+    url: "http://127.0.0.1:9001"
+    skills: ["echo"]
+
+policy:
+  rules:
+    - id: "allow-echo"
+      description: "Allow echo skill for demo"
+      active: true
+      effect: allow
+      condition: "skill == 'echo'"
+      version: 1
+      created_at: "2026-01-01T00:00:00Z"`,
+  },
+  {
+    id: "postgres",
+    title: "PostgreSQL (Production)",
+    description: "Production-ready with connection pooling and environment-based secrets.",
+    filename: "postgres.yaml",
+    code: `server:
+  listen_addr: "0.0.0.0:8080"
+
+database:
+  backend: postgres
+  postgres:
+    host: "A2AWARDEN_DATABASE__POSTGRES__HOST"
+    port: 5432
+    user: "A2AWARDEN_DATABASE__POSTGRES__USER"
+    password: "A2AWARDEN_DATABASE__POSTGRES__PASSWORD"
+    dbname: "a2a_warden"
+    max_connections: 20
+
+admin:
+  api_token: "A2AWARDEN_ADMIN__API_TOKEN"
+
+agents:
+  - name: "payments-agent"
+    url: "http://payments.internal:9103"
+    skills: ["charge-order", "refund-order", "apply-discount"]
+
+policy:
+  rules:
+    - id: "escalate-refunds"
+      description: "Escalate refunds for human approval"
+      active: true
+      effect: escalate
+      condition: "targetAgent == 'payments-agent' && skill == 'refund-order'"
+      version: 1
+      created_at: "2026-01-01T00:00:00Z"
+    - id: "allow-discounts"
+      description: "Auto-approve discounts under threshold"
+      active: true
+      effect: allow
+      condition: "targetAgent == 'payments-agent' && skill == 'apply-discount' && amount < 100"
+      version: 1
+      created_at: "2026-01-01T00:00:00Z"`,
+  },
+  {
+    id: "multi-agent",
+    title: "Multi-Agent with Skills",
+    description: "Multiple agents with skill-level policy gating.",
+    filename: "multi-agent.yaml",
+    code: `server:
+  listen_addr: "0.0.0.0:8080"
+
+database:
+  backend: sqlite
+  sqlite:
+    path: "./a2a-warden.db"
+
+agents:
+  - name: "order-agent"
+    url: "http://127.0.0.1:9001"
+    skills: ["create-order", "get-order", "cancel-order"]
+  - name: "inventory-agent"
+    url: "http://127.0.0.1:9002"
+    skills: ["check-stock", "reserve-items", "release-items"]
+  - name: "payments-agent"
+    url: "http://127.0.0.1:9003"
+    skills: ["charge", "refund", "authorize"]
+  - name: "delivery-agent"
+    url: "http://127.0.0.1:9004"
+    skills: ["schedule", "track", "confirm"]
+
+policy:
+  rules:
+    - id: "deny-by-default"
+      description: "Deny all by default, explicit allow/escalate rules below"
+      active: true
+      effect: deny
+      condition: "true"
+      version: 1
+      created_at: "2026-01-01T00:00:00Z"
+    - id: "allow-read-ops"
+      description: "Allow read-only operations"
+      active: true
+      effect: allow
+      condition: "skill in ['get-order', 'check-stock', 'track']"
+      version: 1
+      created_at: "2026-01-01T00:00:00Z"
+    - id: "escalate-payments"
+      description: "Escalate payment mutations for approval"
+      active: true
+      effect: escalate
+      condition: "targetAgent == 'payments-agent' && skill in ['charge', 'refund']"
+      version: 1
+      created_at: "2026-01-01T00:00:00Z"
+    - id: "allow-inventory-write"
+      description: "Allow inventory mutations"
+      active: true
+      effect: allow
+      condition: "targetAgent == 'inventory-agent' && skill in ['reserve-items', 'release-items']"
+      version: 1
+      created_at: "2026-01-01T00:00:00Z"`,
+  },
+];
+
+const envVars = [
+  { name: "A2AWARDEN_SERVER__LISTEN_ADDR", description: "Server listen address (default: 0.0.0.0:8080)", example: "0.0.0.0:8080" },
+  { name: "A2AWARDEN_DATABASE__BACKEND", description: "Database backend: sqlite or postgres", example: "postgres" },
+  { name: "A2AWARDEN_DATABASE__SQLITE__PATH", description: "SQLite database file path", example: "./a2a-warden.db" },
+  { name: "A2AWARDEN_DATABASE__POSTGRES__HOST", description: "PostgreSQL host", example: "localhost" },
+  { name: "A2AWARDEN_DATABASE__POSTGRES__USER", description: "PostgreSQL username", example: "warden" },
+  { name: "A2AWARDEN_DATABASE__POSTGRES__PASSWORD", description: "PostgreSQL password (use secrets manager)", example: "******" },
+  { name: "A2AWARDEN_ADMIN__API_TOKEN", description: "Admin API bearer token for /api/v1/admin/*", example: "sk-warden-..." },
+  { name: "A2AWARDEN_POLICY__RULES", description: "Inline policy rules as JSON (advanced)", example: "[{\"id\":\"...\"}]" },
+];
+---
+
+<section id="configuration" class="section" style="background: linear-gradient(180deg, transparent 0%, var(--color-bg-elevated) 50%, transparent 100%);" aria-labelledby="config-title">
+  <div class="container">
+    <header class="section-header">
+      <span class="section-tag">Configuration</span>
+      <h2 id="config-title" class="section-title">{title}</h2>
+      <p class="section-description">{subtitle}</p>
+    </header>
+    
+    <!-- Config Examples -->
+    <div class="config-tabs" role="tablist" aria-label="Configuration examples">
+      <div class="tab-list" role="tablist">
+        {configs.map((config, index) => (
+          <button 
+            role="tab" 
+            aria-selected={index === 0}
+            aria-controls={`panel-${config.id}`}
+            id={`tab-${config.id}`}
+            class={`tab-btn ${index === 0 ? 'active' : ''}`}
+            data-tab={config.id}
+          >
+            {config.title}
+          </button>
+        ))}
+      </div>
+      
+      <div class="tab-panels">
+        {configs.map((config, index) => (
+          <div 
+            role="tabpanel" 
+            id={`panel-${config.id}`}
+            aria-labelledby={`tab-${config.id}`}
+            class={`tab-panel ${index === 0 ? 'active' : ''}`}
+            hidden={index !== 0}
+          >
+            <div class="config-panel">
+              <div class="config-header">
+                <p class="config-desc">{config.description}</p>
+                <span class="config-filename">{config.filename}</span>
+              </div>
+              <div class="code-block" data-lang="yaml">
+                <pre><code>{config.code}</code></pre>
+                <button class="copy-btn" aria-label="Copy to clipboard" data-code={config.code}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Environment Variables -->
+    <div class="env-section" aria-labelledby="env-title">
+      <h3 id="env-title" class="env-title">Environment Variable Overrides</h3>
+      <p class="env-desc">Any configuration key can be overridden via environment variables with the <code class="inline-code">A2AWARDEN_</code> prefix. Nested keys use double underscores.</p>
+      
+      <div class="table-wrapper">
+        <table class="env-table">
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            {envVars.map(env => (
+              <tr>
+                <td><code class="inline-code">{env.name}</code></td>
+                <td>{env.description}</td>
+                <td><code class="inline-code">{env.example}</code></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Policy Syntax Reference -->
+    <div class="policy-ref" aria-labelledby="policy-title">
+      <h3 id="policy-title" class="policy-title">Cedar Policy Syntax</h3>
+      <div class="grid grid--2">
+        <div class="policy-card">
+          <h4>Rule Structure</h4>
+          <div class="code-block" data-lang="yaml">
+            <pre><code>policy:
+  rules:
+    - id: "unique-rule-id"
+      description: "Human-readable description"
+      active: true
+      effect: allow | deny | escalate
+      condition: "Cedar expression"
+      version: 1
+      created_at: "2026-01-01T00:00:00Z"</code></pre>
+          </div>
+        </div>
+        <div class="policy-card">
+          <h4>Common Conditions</h4>
+          <ul class="condition-list">
+            <li><code>targetAgent == 'agent-name'</code> — Match specific agent</li>
+            <li><code>skill == 'skill-name'</code> — Match specific skill</li>
+            <li><code>skill in ['a', 'b']</code> — Match any skill in list</li>
+            <li><code>amount > 100</code> — Numeric comparison</li>
+            <li><code>tenant == 'acme-corp'</code> — Tenant isolation</li>
+            <li><code>request.time > '2026-01-01T00:00:00Z'</code> — Time-based rules</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .config-tabs {
+    margin-bottom: var(--space-3xl);
+  }
+  
+  .tab-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+    margin-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-md);
+  }
+  
+  .tab-btn {
+    padding: var(--space-sm) var(--space-lg);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  
+  .tab-btn:hover {
+    color: var(--color-text);
+    background: var(--color-bg-card);
+    border-color: var(--color-border);
+  }
+  
+  .tab-btn.active {
+    color: var(--color-accent);
+    background: var(--color-accent-bg);
+    border-color: var(--color-accent-border);
+  }
+  
+  .tab-panel {
+    animation: fadeIn var(--transition-fast);
+  }
+  
+  .config-panel {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+  
+  .config-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) var(--space-xl);
+    background: var(--color-bg-elevated);
+    border-bottom: 1px solid var(--color-border);
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+  
+  .config-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+  
+  .config-filename {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+  }
+  
+  .code-block {
+    position: relative;
+    background: #0d1117;
+    border: none;
+    border-radius: 0;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.65;
+  }
+  
+  .code-block pre {
+    margin: 0;
+    padding: var(--space-xl);
+    overflow-x: auto;
+  }
+  
+  .code-block code {
+    color: var(--color-text);
+    tab-size: 2;
+  }
+  
+  .copy-btn {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    opacity: 0;
+  }
+  
+  .code-block:hover .copy-btn {
+    opacity: 1;
+  }
+  
+  .copy-btn:hover {
+    color: var(--color-text);
+    background: var(--color-bg-card);
+    border-color: var(--color-border-light);
+  }
+  
+  .copy-btn.copied {
+    color: var(--color-success);
+    border-color: var(--color-success-border);
+  }
+  
+  /* Syntax highlighting */
+  .code-block .token.comment { color: #6a737d; }
+  .code-block .token.keyword { color: #c678dd; }
+  .code-block .token.string { color: #98c379; }
+  .code-block .token.number { color: #d19a66; }
+  .code-block .token.boolean { color: #d19a66; }
+  .code-block .token.punctuation { color: #abb2bf; }
+  .code-block .token.tag { color: #e06c75; }
+  .code-block .token.attr-name { color: #d19a66; }
+  .code-block .token.attr-value { color: #98c379; }
+  
+  /* Environment Variables */
+  .env-section {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-3xl);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .env-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+  }
+  
+  .env-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xl);
+    max-width: 800px;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+  
+  .env-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  
+  .env-table th,
+  .env-table td {
+    padding: var(--space-md) var(--space-lg);
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .env-table th {
+    font-weight: 600;
+    color: var(--color-text);
+    background: var(--color-bg-elevated);
+    white-space: nowrap;
+  }
+  
+  .env-table td {
+    color: var(--color-text-secondary);
+  }
+  
+  .env-table td code {
+    font-size: 0.8125rem;
+  }
+  
+  .env-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .env-table tbody tr:hover td {
+    background: var(--color-bg-elevated);
+  }
+  
+  /* Policy Reference */
+  .policy-ref {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-3xl);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .policy-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xl);
+  }
+  
+  .policy-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+  }
+  
+  .policy-card h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+  }
+  
+  .condition-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .condition-list li {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+    padding: var(--space-sm);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+  
+  .condition-list code {
+    font-size: 0.8125rem;
+    color: var(--color-accent);
+  }
+  
+  @media (max-width: 768px) {
+    .tab-list {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      padding-bottom: var(--space-lg);
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .tab-btn {
+      flex-shrink: 0;
+    }
+    
+    .config-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .code-block pre {
+      padding: var(--space-md);
+    }
+  }
+</style>
+
+<script>
+  // Tab switching
+  const tabList = document.querySelector('.tab-list');
+  const tabBtns = tabList.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabId = btn.dataset.tab;
+      
+      // Update buttons
+      tabBtns.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      
+      // Update panels
+      tabPanels.forEach(panel => {
+        if (panel.id === `panel-${tabId}`) {
+          panel.classList.add('active');
+          panel.hidden = false;
+        } else {
+          panel.classList.remove('active');
+          panel.hidden = true;
+        }
+      });
+    });
+  });
+  
+  // Copy to clipboard
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.dataset.code;
+      try {
+        await navigator.clipboard.writeText(code);
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+        }, 2000);
+      } catch (e) {
+        console.error('Failed to copy:', e);
+      }
+    });
+  });
+</script>
