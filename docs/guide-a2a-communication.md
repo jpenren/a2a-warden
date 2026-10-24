@@ -19,7 +19,7 @@ commands are copy-paste ready.
 ## Step 1: Build the project
 
 ```bash
-git clone https://github.com/the-cygnusdev/a2a-warden.git
+git clone https://github.com/jpenren/a2a-warden.git
 cd a2a-warden
 cargo build --release
 ```
