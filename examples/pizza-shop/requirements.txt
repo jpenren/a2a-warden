@@ -1,0 +1,9 @@
+# Dependencies of the pizza shop demo agents.
+#
+# The agents are built with the official Agent2Agent Python SDK (v1.x); the
+# `http-server` extra brings the Starlette server and the SSE support the
+# SDK needs to expose an agent.
+a2a-sdk[http-server]>=1.0,<2.0
+httpx>=0.27
+uvicorn>=0.30
+pydantic>=2

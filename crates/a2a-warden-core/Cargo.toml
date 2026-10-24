@@ -1,0 +1,40 @@
+[package]
+name = "a2a-warden-core"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+description = "Core domain types, traits, and logic for A2A Warden"
+
+[dependencies]
+# Workspace dependencies
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }
+url = { workspace = true }
+schemars = { workspace = true }
+config = { workspace = true }
+async-trait = { workspace = true }
+tracing = { workspace = true }
+tokio = { workspace = true, features = ["sync", "time", "net"] }
+
+# A2A protocol types (minimal subset for legacy).
+# In Phase 2, evaluate replacing them with the official a2a-rs SDK types (AD-3).
+
+# Cedar policy engine (Phase 4)
+cedar-policy = "4.14"
+cedar-policy-core = "4.14"
+
+# Hash-chained audit log (Phase 5)
+sha2 = { workspace = true }
+hex = { workspace = true }
+
+# PII masking (Phase 5)
+regex = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt"] }

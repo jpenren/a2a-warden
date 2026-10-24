@@ -1,0 +1,29 @@
+# clippy configuration for a2a-warden
+#
+# Lint levels are configured in the workspace manifest under
+# `[workspace.lints.clippy]`. This file only holds the thresholds and the
+# behavioural options that clippy reads from disk.
+
+# Minimum supported Rust version, used by the MSRV lints.
+msrv = "1.80"
+
+# Maximum number of arguments before `too_many_arguments` fires.
+too-many-arguments-threshold = 8
+
+# Maximum number of lines before `too_many_lines` fires.
+too-many-lines-threshold = 120
+
+# Maximum cyclomatic complexity before `cognitive_complexity` fires.
+cognitive-complexity-threshold = 20
+
+# Maximum number of arguments of an `enum_variant` before the lint fires.
+enum-variant-name-threshold = 35
+
+# Maximum length of a type name before `type_complexity` heuristics apply.
+type-complexity-threshold = 250
+
+# Allow `dbg!` inside test code.
+allow-dbg-in-tests = true
+
+# Allow `unwrap()` inside test code.
+allow-unwrap-in-tests = true

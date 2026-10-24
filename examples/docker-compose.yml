@@ -1,0 +1,73 @@
+# Local demo: warden + echo agent + PostgreSQL.
+#
+# Usage:
+#   docker compose up --build
+#   curl http://localhost:8080/api/v1/admin/health
+#
+# The SQLite variant needs nothing but the warden:
+#   docker compose --profile postgres up --build warden
+
+services:
+  warden:
+    build:
+      context: .
+    image: a2a-warden:latest
+    ports:
+      - "8080:8080"
+    environment:
+      A2AWARDEN_SERVER__LISTEN_ADDR: "0.0.0.0:8080"
+      A2AWARDEN_SERVER__PUBLIC_URL: "http://127.0.0.1:8080"
+      A2AWARDEN_DATABASE__BACKEND: "sqlite"
+      A2AWARDEN_DATABASE__SQLITE__PATH: "/var/lib/a2a-warden/a2a-warden.db"
+      A2AWARDEN_ADMIN__TOKEN: "${A2AWARDEN_ADMIN_TOKEN:-}"
+    volumes:
+      - warden-data:/var/lib/a2a-warden
+    depends_on:
+      - echo-agent
+    profiles: ["default"]
+
+  warden-postgres:
+    build:
+      context: .
+    image: a2a-warden:latest
+    ports:
+      - "8080:8080"
+    environment:
+      A2AWARDEN_SERVER__LISTEN_ADDR: "0.0.0.0:8080"
+      A2AWARDEN_SERVER__PUBLIC_URL: "http://127.0.0.1:8080"
+      A2AWARDEN_DATABASE__BACKEND: "postgres"
+      A2AWARDEN_DATABASE__POSTGRES__URL: "postgresql://a2a_warden:a2a_warden@postgres:5432/a2a_warden"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      echo-agent:
+        condition: service_started
+    profiles: ["postgres"]
+
+  echo-agent:
+    image: docker.io/library/python:3.12-alpine
+    working_dir: /srv
+    command: >
+      sh -c "python3 examples/sample-agents/echo-python/echo_agent.py --host 0.0.0.0 --port 9001"
+    volumes:
+      - ./examples:/srv/examples:ro
+    profiles: ["default", "postgres"]
+
+  postgres:
+    image: docker.io/library/postgres:16-alpine
+    environment:
+      POSTGRES_USER: a2a_warden
+      POSTGRES_PASSWORD: a2a_warden
+      POSTGRES_DB: a2a_warden
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U a2a_warden"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    profiles: ["postgres"]
+
+volumes:
+  warden-data:
+  postgres-data:

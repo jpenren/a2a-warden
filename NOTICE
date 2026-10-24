@@ -1,0 +1,24 @@
+A2A Warden
+Copyright 2026 A2A Warden Contributors
+
+This product includes software developed at the A2A Warden Project (https://a2a-warden.io).
+
+This product includes software from the following third-party sources:
+
+- Tokio (MIT License): https://github.com/tokio-rs/tokio
+- Axum (MIT License): https://github.com/tokio-rs/axum
+- SQLx (MIT/Apache-2.0): https://github.com/launchbadge/sqlx
+- Tracing (MIT License): https://github.com/tokio-rs/tracing
+- Serde (MIT/Apache-2.0): https://github.com/serde-rs/serde
+- Clap (MIT/Apache-2.0): https://github.com/clap-rs/clap
+- UUID (MIT/Apache-2.0): https://github.com/uuid-rs/uuid
+- Chrono (MIT/Apache-2.0): https://github.com/chronotope/chrono
+- Rust-embed (MIT/Apache-2.0): https://github.com/pyros2097/rust-embed
+- Tower (MIT License): https://github.com/tower-rs/tower
+- Hyper (MIT License): https://github.com/hyperium/hyper
+- Jsonwebtoken (MIT/Apache-2.0): https://github.com/Keats/jsonwebtoken
+- Ring (ISC/BSD-3): https://github.com/briansmith/ring
+- JCS (Apache-2.0): https://github.com/cyberphone/json-canonicalization
+- Cedar Policy (Apache-2.0): https://github.com/cedar-policy/cedar
+
+See LICENSE file for the full license text.

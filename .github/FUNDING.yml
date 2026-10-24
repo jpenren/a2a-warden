@@ -1,0 +1,5 @@
+# Funding configuration for A2A Warden
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+github: [a2a-warden]
+open_collective: a2a-warden

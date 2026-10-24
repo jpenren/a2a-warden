@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A2A Warden console: observe every message, verify every agent and approve every task."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <title>A2A Warden - Agent Communication Security</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <!-- Sidebar ---------------------------------------------------------- -->
+      <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+        <div class="sidebar__brand">
+          <a class="brand" href="#" aria-label="A2A Warden home">
+            <span class="brand__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <polyline points="9 12 11 14 15 10" />
+              </svg>
+            </span>
+            <span class="brand__text">
+              <span class="brand__title">A2A Warden</span>
+              <span class="brand__subtitle">Agent security console</span>
+            </span>
+          </a>
+        </div>
+
+        <nav class="sidebar__nav" id="nav" aria-label="Sections">
+          <p class="nav__group">Monitoring</p>
+          <button class="nav__item is-active" data-view="dashboard" type="button" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="12" y1="3" x2="12" y2="21" />
+            </svg>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav__item" data-view="tasks" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="8" y1="6" x2="21" y2="6" />
+              <line x1="8" y1="12" x2="21" y2="12" />
+              <line x1="8" y1="18" x2="21" y2="18" />
+              <line x1="3" y1="6" x2="3.01" y2="6" />
+              <line x1="3" y1="12" x2="3.01" y2="12" />
+              <line x1="3" y1="18" x2="3.01" y2="18" />
+            </svg>
+            <span>Tasks</span>
+          </button>
+          <button class="nav__item" data-view="approvals" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+            </svg>
+            <span>Approvals</span>
+            <span class="nav__badge" id="approval-badge" hidden>0</span>
+          </button>
+          <button class="nav__item" data-view="agents" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="4" width="16" height="16" rx="3" />
+              <rect x="9" y="9" width="6" height="6" rx="1" />
+              <line x1="9" y1="1" x2="9" y2="4" />
+              <line x1="15" y1="1" x2="15" y2="4" />
+              <line x1="9" y1="20" x2="9" y2="23" />
+              <line x1="15" y1="20" x2="15" y2="23" />
+              <line x1="20" y1="9" x2="23" y2="9" />
+              <line x1="20" y1="14" x2="23" y2="14" />
+              <line x1="1" y1="9" x2="4" y2="9" />
+              <line x1="1" y1="14" x2="4" y2="14" />
+            </svg>
+            <span>Agents</span>
+          </button>
+
+          <p class="nav__group">Supervision</p>
+          <button class="nav__item" data-view="traffic" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 2H11l-8 8 8 8h11a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
+              <polyline points="16 4 20 4 16 8"/>
+              <polyline points="8 12 12 12 8 16"/>
+              <polyline points="4 16 8 16 4 20"/>
+            </svg>
+            <span>Traffic</span>
+          </button>
+          <button class="nav__item" data-view="search" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <span>Search</span>
+          </button>
+          <button class="nav__item" data-view="audit" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 3v5h5"/>
+              <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/>
+              <path d="M12 7v5l4 2"/>
+            </svg>
+            <span>Audit</span>
+          </button>
+
+          <p class="nav__group">System</p>
+          <a class="nav__item" id="nav-agent-card" href="/.well-known/agent-card.json" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <line x1="7" y1="9" x2="17" y2="9" />
+              <line x1="7" y1="13" x2="13" y2="13" />
+              <line x1="7" y1="17" x2="10" y2="17" />
+            </svg>
+            <span>Agent Card</span>
+          </a>
+        </nav>
+
+        <div class="sidebar__footer">
+          <div class="warden-status" id="status-indicator" role="status" aria-live="polite">
+            <span class="warden-status__dot" aria-hidden="true"></span>
+            <span class="warden-status__text">Connecting…</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar__scrim" id="sidebar-scrim" hidden></div>
+
+      <!-- Main ------------------------------------------------------------ -->
+      <div class="main">
+        <header class="topbar">
+          <button class="topbar__burger" id="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+
+          <div class="topbar__heading">
+            <h1 class="topbar__title" id="page-title">Tasks</h1>
+            <p class="topbar__subtitle" id="page-subtitle">Every A2A task observed by the warden</p>
+          </div>
+
+          <div class="topbar__actions">
+            <button class="btn btn--ghost btn--icon" id="theme-toggle" type="button" title="Switch colour scheme" aria-label="Switch colour scheme">
+              <svg class="icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="4.5" />
+                <line x1="12" y1="1.5" x2="12" y2="3.5" />
+                <line x1="12" y1="20.5" x2="12" y2="22.5" />
+                <line x1="1.5" y1="12" x2="3.5" y2="12" />
+                <line x1="20.5" y1="12" x2="22.5" y2="12" />
+                <line x1="4.6" y1="4.6" x2="6" y2="6" />
+                <line x1="18" y1="18" x2="19.4" y2="19.4" />
+                <line x1="4.6" y1="19.4" x2="6" y2="18" />
+                <line x1="18" y1="6" x2="19.4" y2="4.6" />
+              </svg>
+              <svg class="icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+              </svg>
+            </button>
+        </header>
+
+        <main class="content" id="view" aria-live="polite"></main>
+      </div>
+    </div>
+
+    <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="false"></div>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

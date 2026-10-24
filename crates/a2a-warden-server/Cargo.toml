@@ -1,0 +1,35 @@
+[package]
+name = "a2a-warden-server"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+description = "axum: A2A endpoints, admin API, embedded UI router for A2A Warden"
+
+[dependencies]
+a2a-warden-core = { path = "../a2a-warden-core" }
+anyhow = { workspace = true }
+async-trait = { workspace = true }
+thiserror = { workspace = true }
+axum = { workspace = true }
+tower = { workspace = true }
+tower-http = { workspace = true, features = ["cors", "trace"] }
+tokio = { workspace = true, features = ["full"] }
+tracing = { workspace = true }
+rust-embed = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+reqwest = { workspace = true }
+url = { workspace = true }
+chrono = { workspace = true }
+tokio-stream = { workspace = true, features = ["sync"] }
+sha2 = { workspace = true }
+hex = { workspace = true }
+
+[dev-dependencies]
+a2a-warden-store = { path = "../a2a-warden-store" }
+sqlx = { workspace = true, features = ["runtime-tokio-rustls", "sqlite", "postgres", "chrono", "uuid", "json"] }
+tempfile = { workspace = true }
+bytes = { workspace = true }
+http-body-util = { workspace = true }
+tower = { workspace = true, features = ["util"] }

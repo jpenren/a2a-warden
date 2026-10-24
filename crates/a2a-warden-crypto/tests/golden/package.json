@@ -1,0 +1,10 @@
+{
+  "name": "a2a-warden-golden-vectors",
+  "private": true,
+  "type": "module",
+  "description": "Generates and checks the Agent Card golden vectors of the official JavaScript SDK",
+  "dependencies": {
+    "@a2a-js/sdk": "1.3.0",
+    "jose": "6.2.13"
+  }
+}

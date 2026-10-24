@@ -1,0 +1,65 @@
+{
+  "keys": [
+    {
+      "alg": "ES256",
+      "crv": "P-256",
+      "kid": "python-es256",
+      "kty": "EC",
+      "use": "sig",
+      "x": "hKyp9yNh6UIPBbA6eW8yq17skhyqlwIpjAJ_rQya7Xs",
+      "y": "-BtoD_DIrLig9AKp9fY_YUWmWtjmUcmNozFRtv0cMSc"
+    },
+    {
+      "alg": "ES384",
+      "crv": "P-384",
+      "kid": "python-es384",
+      "kty": "EC",
+      "use": "sig",
+      "x": "BWeq01bJ6ix9VxMYrGtyAGcagGSEL26JuGJdUhmQbcXMzFYBQasFNxlBlDf55pF2",
+      "y": "2oE3pPmRM3G40Ahgfrcbfkx5LrqSWhT_BPqAQQHz0ym8GDn1Y9LWvoU2vEsbr6Fg"
+    },
+    {
+      "alg": "ES512",
+      "crv": "P-521",
+      "kid": "python-es512",
+      "kty": "EC",
+      "use": "sig",
+      "x": "AX0MSuXcTmqRWSmf05kjTNithBwNJl2zvYR0HEqtUv2i5IYQuJV-AFvkxjgdY743W05c-q1fz6R-hcjaR5f2mcFY",
+      "y": "AaOC2zH8nTyPQ2IXHPeQIEwrdNrhZ28Sys61rz8lsKNI50eWeVEOHihuqx2kUrrWdPb0f27o9YSp6otaFG4ij0gp"
+    },
+    {
+      "alg": "EdDSA",
+      "crv": "Ed25519",
+      "kid": "python-eddsa",
+      "kty": "OKP",
+      "use": "sig",
+      "x": "66-4ExY8rC-zR34idYyeLR2RbQpmb5gcT2YSXiD6PIA"
+    },
+    {
+      "alg": "RS256",
+      "e": "AQAB",
+      "kid": "python-rs256",
+      "kty": "RSA",
+      "n": "okPWG2Y9msjKgZD062_8cIvQIJnxF43QYbKhaRN2lgM8jFR2J0IL2jK2-lVBP7XqoBrJlvQITZXKV89JoJt1t5BgJrWZ8VHMzgfkJ63RV0J7uuoHeDQzU1Ede6-fYOmfXL_MQSiqg7L18GtZo9tG9jRzcP6TeBN9SS6J4_QEmjRV8TeFc3oXAEpXP7n4YMwsyL0oED5rC9-tMdap3xRfVv3q4tkFzQAabHqEAbXE0lBV-Em9P5Brtjm97NQDqBIY9YO3jnortnwWTNbHzF1_7sn9eNYMlKgvM48w5JorkhwddCpcshuefjn7JEgy9zmTadpWB90vKrKNuu7so2H6LQ",
+      "use": "sig"
+    },
+    {
+      "alg": "ES256",
+      "crv": "P-256",
+      "kid": "warden-es256",
+      "kty": "EC",
+      "use": "sig",
+      "x": "hKyp9yNh6UIPBbA6eW8yq17skhyqlwIpjAJ_rQya7Xs",
+      "y": "-BtoD_DIrLig9AKp9fY_YUWmWtjmUcmNozFRtv0cMSc"
+    },
+    {
+      "alg": "ES256",
+      "crv": "P-256",
+      "kid": "javascript-es256",
+      "kty": "EC",
+      "use": "sig",
+      "x": "hKyp9yNh6UIPBbA6eW8yq17skhyqlwIpjAJ_rQya7Xs",
+      "y": "-BtoD_DIrLig9AKp9fY_YUWmWtjmUcmNozFRtv0cMSc"
+    }
+  ]
+}

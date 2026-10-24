@@ -1,0 +1,57 @@
+# A2A Warden demo configuration for the pizza shop scenario.
+#
+# The warden routes by skill, records all traffic, and holds the
+# approval-gated skills in input-required until a human decides.
+#
+# Run it from the root of the repository:
+#     a2a-warden --config examples/pizza-shop/warden-pizzeria.yaml
+
+server:
+  listen_addr: "127.0.0.1:8080"
+  a2a_version: "1.0"
+  # The order workflow waits for human approvals, so the delegates may take
+  # a while to answer.
+  request_timeout_secs: 300
+  public_url: "http://127.0.0.1:8080"
+
+database:
+  backend: sqlite
+  sqlite:
+    path: "./a2a-warden-pizzeria.db"
+
+admin:
+  enabled: true
+  path: "/api/v1/admin"
+  # Static token for the administration API. Leave it null only for local
+  # experiments; the API is unauthenticated in that case.
+  token: null
+  token_header: "X-Admin-Token"
+
+frontend:
+  enabled: true
+  path: "/ui"
+  spa_fallback: "/ui/index.html"
+
+agents:
+  - name: order-agent
+    url: "http://127.0.0.1:9101/"
+    skills: ["place-order"]
+
+  - name: inventory-agent
+    url: "http://127.0.0.1:9102/"
+    skills: ["check-ingredients"]
+
+  - name: payments-agent
+    url: "http://127.0.0.1:9103/"
+    skills: ["charge-order", "apply-discount", "refund-order"]
+    # Any task addressed to these skills is held for human approval:
+    require_approval_skills: ["apply-discount", "refund-order"]
+
+  - name: delivery-agent
+    url: "http://127.0.0.1:9104/"
+    skills: ["assign-delivery", "zone-exception"]
+    require_approval_skills: ["zone-exception"]
+
+retention:
+  audit_days: 90
+  task_days: 30

@@ -1,0 +1,133 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v0.1.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  # ============================================================
+  # Release with cargo-dist
+  # ============================================================
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build the console assets
+        run: make frontend
+      - name: Install cargo-dist
+        uses: axodotdev/cargo-dist-action@v0
+        with:
+          install-only: true
+      - name: Run cargo-dist
+        run: cargo dist build --artifacts=global
+        env:
+          CARGO_DIST_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-artifacts
+          path: target/artifacts/**
+          retention-days: 7
+
+  # ============================================================
+  # Publish to GitHub Releases
+  # ============================================================
+  publish-github:
+    name: Publish to GitHub
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-artifacts
+          path: target/artifacts
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/artifacts/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+
+  # ============================================================
+  # Docker image build and publish
+  # ============================================================
+  docker:
+    name: Docker Image
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-artifacts
+          path: target/artifacts
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=$(ls target/artifacts/a2a-warden-*-x86_64-unknown-linux-gnu.tar.gz | head -1 | sed 's/.*a2a-warden-\(.*\)-x86_64.*/\1/')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/a2a-warden:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/a2a-warden:latest
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ============================================================
+  # Publish to crates.io (manual approval)
+  # ============================================================
+  publish-crates:
+    name: Publish to crates.io
+    needs: release
+    runs-on: ubuntu-latest
+    if: false  # Disabled by default - enable when ready
+    environment: crates-io
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Publish crates
+        run: cargo publish --workspace
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}

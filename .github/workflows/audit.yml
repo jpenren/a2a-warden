@@ -1,0 +1,144 @@
+name: Security Audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * 0'  # Weekly on Sunday
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  # ============================================================
+  # Cargo audit
+  # ============================================================
+  cargo-audit:
+    name: Cargo Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-audit
+        uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-audit
+          version: latest
+      - name: Run cargo audit
+        id: audit
+        run: |
+          cargo audit --json > audit-results.json || true
+          cat audit-results.json
+      - name: Upload audit results
+        uses: actions/upload-artifact@v4
+        with:
+          name: cargo-audit-results
+          path: audit-results.json
+      - name: Check for vulnerabilities
+        run: |
+          VULN_COUNT=$(jq '[.vulnerabilities[] | select(.advisory.severity != "none")] | length' audit-results.json)
+          if [ "$VULN_COUNT" -gt 0 ]; then
+            echo "Found $VULN_COUNT vulnerabilities"
+            jq '.vulnerabilities[] | select(.advisory.severity != "none") | {package: .package.name, version: .package.version, severity: .advisory.severity, title: .advisory.title}' audit-results.json
+            exit 1
+          else
+            echo "No vulnerabilities found"
+          fi
+
+  # ============================================================
+  # Dependabot alerts (GitHub native)
+  # ============================================================
+  dependabot:
+    name: Dependabot Alerts
+    runs-on: ubuntu-latest
+    # Informational: the API is only available to repositories with the
+    # security advisories enabled, so a failure here must not break the build.
+    continue-on-error: true
+    steps:
+      - name: Check for Dependabot alerts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const alerts = await github.rest.dependabot.getDependabotAlerts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+            if (alerts.data.length > 0) {
+              console.log('Open Dependabot alerts:', alerts.data.length);
+              for (const alert of alerts.data) {
+                console.log(`- ${alert.dependency.package.name}: ${alert.security_advisory.severity} - ${alert.security_advisory.summary}`);
+              }
+              core.setFailed('Dependabot alerts found');
+            } else {
+              console.log('No open Dependabot alerts');
+            }
+
+  # ============================================================
+  # OSSF Scorecard
+  # ============================================================
+  scorecard:
+    name: OSSF Scorecard
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      security-events: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Scorecard
+        uses: ossf/scorecard-action@v2.3
+        with:
+          results_file: scorecard-results.sarif
+          results_format: sarif
+          publish_results: true
+      - name: Upload Scorecard results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: scorecard-results.sarif
+
+  # ============================================================
+  # License check
+  # ============================================================
+  license-check:
+    name: License Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cargo-deny
+        uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-deny
+          version: latest
+      - name: Check licenses
+        run: cargo deny check licenses
+        continue-on-error: true
+
+  # ============================================================
+  # Summary
+  # ============================================================
+  audit-summary:
+    name: Audit Summary
+    runs-on: ubuntu-latest
+    needs: [cargo-audit, dependabot, scorecard, license-check]
+    if: always()
+    steps:
+      - name: Check results
+        run: |
+          echo "Security audit completed"
+          if [ "${{ needs.cargo-audit.result }}" != "success" ]; then
+            echo "::error::Cargo audit failed"
+            exit 1
+          fi
+          if [ "${{ needs.dependabot.result }}" != "success" ]; then
+            echo "::warning::Dependabot alerts found"
+          fi
+          if [ "${{ needs.scorecard.result }}" != "success" ]; then
+            echo "::warning::Scorecard checks failed"
+          fi
+          echo "Audit summary complete"

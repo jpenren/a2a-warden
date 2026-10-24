@@ -1,0 +1,52 @@
+{
+  "capabilities": {
+    "pushNotifications": true,
+    "streaming": true
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain"
+  ],
+  "description": "Agent Card used by the A2A Warden golden vector suite",
+  "name": "Golden Agent",
+  "provider": {
+    "organization": "Example Organization",
+    "url": "https://example.com"
+  },
+  "signatures": [
+    {
+      "protected": "eyJhbGciOiJSUzI1NiIsImtpZCI6InB5dGhvbi1yczI1NiIsInR5cCI6IkpPU0UifQ",
+      "signature": "IKs7FkCoffqj2PnXgfBdvpu2WT5YOIn1awARZ2M8MWmSwDetFeMQW6uVMyMIwpqm0_fzQZqXJmifloT0SysLhCM7FDuUsk9hpm39n3xeWvhf4Z3MVu92UIkQNFwW3sDdYr2IbfYTifurWp0Zm7jbiaXy13Vi3Ep5VF_J86KoOx6c85kTV56wjtYHSnMztkSGpoTWpTOgpsAvve0gB9Z-Vtf4p7Ngtdv0T0vuKidPTBfWfjvHkuIJ7HY33z9P1BUvAAn8jmNU1omFmeMtNZ3GPvmpaGk6S3mrW--2oaNQj6zUzDIOjXYnRNhmn0qk4SlpIqEiXtLSr9soUfZCghiSQQ"
+    }
+  ],
+  "skills": [
+    {
+      "description": "Repeats the received text",
+      "examples": [
+        "hello"
+      ],
+      "id": "echo",
+      "inputModes": [
+        "text/plain"
+      ],
+      "name": "Echo",
+      "outputModes": [
+        "text/plain"
+      ],
+      "tags": [
+        "test",
+        "echo"
+      ]
+    }
+  ],
+  "supportedInterfaces": [
+    {
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0",
+      "url": "https://agent.example/a2a"
+    }
+  ],
+  "version": "1.0.0"
+}

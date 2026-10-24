@@ -1,0 +1,85 @@
+# Rust
+/target/
+**/*.rs.bk
+# Cargo.lock is committed: a2a-warden is a binary, so the lock file must be
+# reproducible and `--locked` builds depend on it.
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+dist/
+build/
+*.deb
+*.rpm
+*.msi
+*.dmg
+*.pkg
+
+# Frontend
+frontend/node_modules/
+# The build output is not committed, but the directory must exist for the
+# rust-embed build to succeed on a fresh checkout.
+frontend/dist/*
+!frontend/dist/.gitkeep
+frontend/.vite/
+
+# Database
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.sqlite
+*.sqlite-journal
+
+# Logs
+*.log
+logs/
+
+# Coverage
+coverage/
+*.profraw
+*.profdata
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Cargo dist
+target/release/a2a-warden
+target/aarch64-*/
+target/x86_64-*/
+
+# Docker
+.dockerignore
+
+# Mise / asdf / nvm
+.mise.toml
+.tool-versions
+
+# Python (pizza shop demo)
+__pycache__/
+*.py[cod]
+.venv/
+/a2a-warden-pizzeria.db
+/a2a-warden-pizzeria.db-shm
+/a2a-warden-pizzeria.db-wal

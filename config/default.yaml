@@ -1,0 +1,46 @@
+server:
+  listen_addr: "0.0.0.0:8080"
+  a2a_version: "1.0"
+  request_timeout_secs: 30
+  max_body_size: 10485760
+  cors_enabled: true
+  cors_origins:
+    - "http://localhost:9000"
+    - "http://127.0.0.1:9001"
+  public_url: "http://127.0.0.1:8080"
+
+database:
+  backend: sqlite
+  sqlite:
+    path: "./a2a-warden.db"
+    wal_mode: true
+    busy_timeout_ms: 5000
+
+# Cedar policy engine configuration (Phase 4)
+# When present, Cedar policies replace legacy interception rule
+policy:
+  rules:
+    - id: "escalate-all-skills"
+      description: "Escalate all tasks for human approval by default"
+      active: true
+      effect: escalate
+      condition: "targetAgent == 'echo-agent' && skill != ''"
+      version: 1
+      created_at: "2026-01-01T00:00:00Z"
+
+retention:
+  audit_days: 90
+  task_days: 30
+  auto_purge: false
+  purge_interval_hours: 24
+
+frontend:
+  enabled: true
+  path: "/ui"
+  spa_fallback: "/ui/index.html"
+
+admin:
+  enabled: true
+  path: "/api/v1/admin"
+  token: null
+  token_header: "X-Admin-Token"

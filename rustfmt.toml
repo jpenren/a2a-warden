@@ -1,0 +1,23 @@
+# rustfmt.toml
+# Configuration for rustfmt
+# https://rust-lang.github.io/rustfmt/config-options.html
+
+edition = "2021"
+max_width = 100
+tab_spaces = 4
+hard_tabs = false
+newline_style = "Unix"
+use_small_heuristics = "Max"
+fn_params_layout = "Tall"
+brace_style = "SameLineWhere"
+control_brace_style = "AlwaysSameLine"
+reorder_imports = true
+group_imports = "StdExternalCrate"
+imports_granularity = "Crate"
+normalize_doc_attributes = true
+doc_comment_line_length = 90
+wrap_comments = true
+format_code_in_doc_comments = true
+format_strings = true
+remove_nested_parens = true
+merge_derives = true
