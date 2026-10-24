@@ -83,3 +83,7 @@ __pycache__/
 /a2a-warden-pizzeria.db
 /a2a-warden-pizzeria.db-shm
 /a2a-warden-pizzeria.db-wal
+
+
+site/--typescript
+site/node_modules
