@@ -6,7 +6,7 @@ layout: "../layouts/Layout.astro"
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width"/>
-<title>A2A Warden — Intermediario para agentes A2A</title>
+<title>A2A Warden — Trusted intermediary for agent communication</title>
 <style is:global>
 :root{--bg:#0b1120;--surface:#111827;--text:#e2e8f0;--muted:#94a3b8;--accent:#4f83f1;--accent2:#22c55e;--danger:#ef4444;--border:#1f2937;--radius:16px}
 *{box-sizing:border-box}
@@ -45,7 +45,7 @@ footer{text-align:center;color:var(--muted);padding:40px 0;font-size:.85rem;bord
 <div class="container">
 <header>
   <h1>A2A Warden</h1>
-  <p class="lead">Intermediario de confianza entre agentes A2A. Registra tráfico, verifica tarjetas firmadas, aplica políticas Cedar, y permite supervisión humana — todo en un executable.</p>
+  <p class="lead">A2A Warden acts as a trusted hub-and-spoke intermediary. Records traffic, verifies signed Agent Cards, applies Cedar policies, enables human supervision — all in one executable.</p>
   <div class="menu">
     <a href="#caracteristicas">Características</a>
     <a href="#casos">Casos de uso</a>
@@ -54,8 +54,8 @@ footer{text-align:center;color:var(--muted);padding:40px 0;font-size:.85rem;bord
   </div>
 </header>
 
-<section id="caracteristicas">
-  <h2>Características</h2>
+<section id="features">
+  <h2>Features</h2>
   <div class="grid">
     <div class="card"><h3>Reproducción y reenvío</h3><p>Mensajes con <code>message_id</code> corregido para replay/resend sin perder identidad.</p><span class="tag">A2A</span></div>
     <div class="card"><h3>Tráfico en vivo</h3><p>Feed activo con UUID completo, JSON y formato de tiempo real; activa solo con click.</p><span class="tag green">Live</span></div>
@@ -66,10 +66,10 @@ footer{text-align:center;color:var(--muted);padding:40px 0;font-size:.85rem;bord
   </div>
 </section>
 
-<section id="casos">
-  <h2>Casos de uso interactivos</h2>
+<section id="use-cases">
+  <h2>Interactive use cases</h2>
 
-  <h3>Comunicación entre agentes (diagrama interactivo)</h3>
+  <h3>Agent communication (interactive diagram)</h3>
   <div class="diagram" role="img" aria-label="Diagrama de comunicación entre agentes">
     <svg viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg" style="max-width:640px">
       <rect x="20" y="60" width="100" height="60" rx="10" fill="#111827" stroke="#4f83f1" stroke-width="2"/>
@@ -85,22 +85,22 @@ footer{text-align:center;color:var(--muted);padding:40px 0;font-size:.85rem;bord
       <rect x="320" y="110" width="140" height="36" rx="8" fill="#111827" stroke="#ef4444" stroke-width="1.5"/>
       <text x="390" y="134" font-size="11" fill="#fca5a5" text-anchor="middle">Aprobación manual</text>
     </svg>
-    <div class="label">Agente A → Warden (registra y verifica tarjeta) → Agente B. Si hay política escalada, se requiere aprobación manual.</div>
+    <div class="label">Agent A → Warden (records and verifies card) → Agent B. If escalated policy applies, manual approval is required.</div>
   </div>
 
-  <h3>Aprobación manual (diagrama interactivo)</h3>
+  <h3>Human approval (interactive diagram)</h3>
   <div class="diagram" role="img" aria-label="Flujo de aprobación manual">
     <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="max-width:640px">
       <rect x="20" y="20" width="100" height="40" rx="8" fill="#111827" stroke="#4f83f1" stroke-width="1.5"/>
-      <text x="70" y="46" font-size="11" fill="#e2e8f0" text-anchor="middle">Tarea creada</text>
+      <text x="70" y="46" font-size="11" fill="#e2e8f0" text-anchor="middle">Task created</text>
       <rect x="160" y="20" width="100" height="40" rx="8" fill="#111827" stroke="#f59e0b" stroke-width="1.5"/>
-      <text x="210" y="46" font-size="11" fill="#e2e8f0" text-anchor="middle">Política escalada</text>
+      <text x="210" y="46" font-size="11" fill="#e2e8f0" text-anchor="middle">Policy escalated</text>
       <rect x="300" y="20" width="100" height="40" rx="8" fill="#111827" stroke="#ef4444" stroke-width="1.5"/>
-      <text x="350" y="46" font-size="11" fill="#e2e8f0" text-anchor="middle">Pendiente aprobación</text>
+      <text x="350" y="46" font-size="11" fill="#e2e8f0" text-anchor="middle">Pending approval</text>
       <rect x="440" y="20" width="100" height="40" rx="8" fill="#111827" stroke="#22c55e" stroke-width="1.5"/>
-      <text x="490" y="46" font-size="11" fill="#e2e8f0" text-anchor="middle">Decisión humana</text>
+      <text x="490" y="46" font-size="11" fill="#e2e8f0" text-anchor="middle">Human decision</text>
       <rect x="580" y="20" width="60" height="40" rx="8" fill="#111827" stroke="#4f83f1" stroke-width="1.5"/>
-      <text x="610" y="46" font-size="10" fill="#e2e8f0" text-anchor="middle">Ejecutado</text>
+      <text x="610" y="46" font-size="10" fill="#e2e8f0" text-anchor="middle">Executed</text>
       <path d="M120 40 L160 40" stroke="#4f83f1" stroke-width="2" marker-end="url(#arrow2)"/>
       <path d="M260 40 L300 40" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrow2)"/>
       <path d="M400 40 L440 40" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow2)"/>
@@ -108,33 +108,33 @@ footer{text-align:center;color:var(--muted);padding:40px 0;font-size:.85rem;bord
       <defs><marker id="arrow2" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto"><polygon points="0 0,10 3,0 6" fill="#4f83f1"/></marker></defs>
       <text x="320" y="110" font-size="10" fill="#94a3b8" text-anchor="middle">Si se aprueba → se ejecuta. Si se rechaza → denegado y registrado en auditoría.</text>
     </svg>
-    <div class="label">Tarea → política escalada → aprobación (pendiente) → decisión → ejecución. Todo auditado.</div>
+    <div class="label">Task → escalated policy → approval (pending) → decision → execution. Fully audited.</div>
   </div>
 
   <div class="interactive">
-    <button onclick="document.getElementById('demo-modal').style.display='flex'">Ver demo interactiva</button>
-    <button onclick="document.getElementById('demo-modal').style.display='none'" class="secondary">Ocultar</button>
+    <button onclick="document.getElementById('demo-modal').style.display='flex'">View interactive demo</button>
+    <button onclick="document.getElementById('demo-modal').style.display='none'" class="secondary">Hide</button>
   </div>
   <div id="demo-modal" style="display:none;background:rgba(11,17,32,.95);position:fixed;inset:0;z-index:50;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:560px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)">
       <h3 style="margin-top:0">Simulación: flujo con aprobación</h3>
-      <p><strong>Agente A</strong> envía una tarea <code>create-order</code> a <strong>Agent B</strong>. La política Cedar requiere aprobación para ese skill.</p>
+      <p><strong>Agent A</strong> sends a <code>create-order</code> task to <strong>Agent B</strong>. Cedar policy requires approval for that skill.</p>
       <pre><code>policy:
   rules:
     - id: "esc-order"
       effect: escalate
       condition: "skill == 'create-order' && targetAgent == 'delivery-agent'"</code></pre>
-      <p>Resultado: tarea en <span style="color:var(--danger)">pendiente aprobación</span>. El supervisor aprueba → se ejecuta y se registra en audit.</p>
+      <p>Result: task in <span style="color:var(--danger)">pending approval</span>. Supervisor approves → executed and audited.</p>
       <button onclick="document.getElementById('demo-modal').style.display='none'">Cerrar</button>
     </div>
   </div>
 </section>
 
 <section id="config">
-  <h2>Ejemplos de configuración</h2>
+  <h2>Configuration examples</h2>
   <div class="grid">
     <div>
-      <h3>SQLite básico</h3>
+      <h3>Basic SQLite</h3>
       <pre><code>database:
   backend: sqlite
   sqlite:
@@ -143,7 +143,7 @@ server:
   listen_addr: "0.0.0.0:8080"</code></pre>
     </div>
     <div>
-      <h3>Agente con política</h3>
+      <h3>Agent with policy</h3>
       <pre><code>agents:
   - name: "echo-agent"
     url: "http://127.0.0.1:9001"
@@ -169,28 +169,28 @@ admin:
   </div>
 </section>
 
-<section id="inicio">
-  <h3>Capturas</h3>
+<section id="quickstart">
+  <h3>Screenshots</h3>
   <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
     <figure style="margin:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center">
       <img src="/assets/tasks.png" alt="Tasks" style="max-width:100%;border-radius:8px;border:1px solid var(--border)"/>
-      <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">Lista de tareas con paginación y filtros</figcaption>
+      <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">Task list with pagination and filters</figcaption>
     </figure>
     <figure style="margin:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center">
       <img src="/assets/task-details.png" alt="Task details" style="max-width:100%;border-radius:8px;border:1px solid var(--border)"/>
-      <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">Detalle de tarea y acciones</figcaption>
+      <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">Task details and actions</figcaption>
     </figure>
     <figure style="margin:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center">
       <img src="/assets/task-completed-details.png" alt="Task completed details" style="max-width:100%;border-radius:8px;border:1px solid var(--border)"/>
-      <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">Tarea completada con auditoría</figcaption>
+      <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">Completed task with audit</figcaption>
     </figure>
   </div>
 
-  <h2>Inicio rápido</h2>
+  <h2>Quick start</h2>
   <pre><code>cargo build --release
 ./target/release/a2a-warden --config examples/config/sqlite.yaml</code></pre>
-  <p>Consola: <a href="http://127.0.0.1:8080/ui" style="color:var(--accent)">http://127.0.0.1:8080/ui</a></p>
-  <p>Ejecuta el agente remoto:</p>
+  <p>Console: <a href="http://127.0.0.1:8080/ui" style="color:var(--accent)">http://127.0.0.1:8080/ui</a></p>
+  <p>Run the remote agent:</p>
   <pre><code>python3 examples/sample-agents/echo-python/echo_agent.py --port 9001</code></pre>
 </section>
 
