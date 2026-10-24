@@ -7,7 +7,7 @@ interface Props {
 
 const {
   title = "Configuration",
-  subtitle = "YAML configuration with environment variable overrides. All keys prefixed with A2AWARDEN_."
+  subtitle = "YAML configuration examples for different deployment scenarios."
 } = Astro.props;
 
 const configs = [
@@ -141,17 +141,6 @@ policy:
       created_at: "2026-01-01T00:00:00Z"`,
   },
 ];
-
-const envVars = [
-  { name: "A2AWARDEN_SERVER__LISTEN_ADDR", description: "Server listen address (default: 0.0.0.0:8080)", example: "0.0.0.0:8080" },
-  { name: "A2AWARDEN_DATABASE__BACKEND", description: "Database backend: sqlite or postgres", example: "postgres" },
-  { name: "A2AWARDEN_DATABASE__SQLITE__PATH", description: "SQLite database file path", example: "./a2a-warden.db" },
-  { name: "A2AWARDEN_DATABASE__POSTGRES__HOST", description: "PostgreSQL host", example: "localhost" },
-  { name: "A2AWARDEN_DATABASE__POSTGRES__USER", description: "PostgreSQL username", example: "warden" },
-  { name: "A2AWARDEN_DATABASE__POSTGRES__PASSWORD", description: "PostgreSQL password (use secrets manager)", example: "******" },
-  { name: "A2AWARDEN_ADMIN__API_TOKEN", description: "Admin API bearer token for /api/v1/admin/*", example: "sk-warden-..." },
-  { name: "A2AWARDEN_POLICY__RULES", description: "Inline policy rules as JSON (advanced)", example: "[{\"id\":\"...\"}]" },
-];
 ---
 
 <section id="configuration" class="section" style="background: linear-gradient(180deg, transparent 0%, var(--color-bg-elevated) 50%, transparent 100%);" aria-labelledby="config-title">
@@ -203,33 +192,6 @@ const envVars = [
             </div>
           </div>
         ))}
-      </div>
-    </div>
-    
-    <!-- Environment Variables -->
-    <div class="env-section" aria-labelledby="env-title">
-      <h3 id="env-title" class="env-title">Environment Variable Overrides</h3>
-      <p class="env-desc">Any configuration key can be overridden via environment variables with the <code class="inline-code">A2AWARDEN_</code> prefix. Nested keys use double underscores.</p>
-      
-      <div class="table-wrapper">
-        <table class="env-table">
-          <thead>
-            <tr>
-              <th>Variable</th>
-              <th>Description</th>
-              <th>Example</th>
-            </tr>
-          </thead>
-          <tbody>
-            {envVars.map(env => (
-              <tr>
-                <td><code class="inline-code">{env.name}</code></td>
-                <td>{env.description}</td>
-                <td><code class="inline-code">{env.example}</code></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </div>
     
@@ -418,62 +380,6 @@ const envVars = [
     margin-top: var(--space-3xl);
     padding-top: var(--space-3xl);
     border-top: 1px solid var(--color-border);
-  }
-  
-  .env-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin-bottom: var(--space-sm);
-  }
-  
-  .env-desc {
-    font-size: 0.9375rem;
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-xl);
-    max-width: 800px;
-  }
-  
-  .table-wrapper {
-    overflow-x: auto;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-  }
-  
-  .env-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-  }
-  
-  .env-table th,
-  .env-table td {
-    padding: var(--space-md) var(--space-lg);
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-  }
-  
-  .env-table th {
-    font-weight: 600;
-    color: var(--color-text);
-    background: var(--color-bg-elevated);
-    white-space: nowrap;
-  }
-  
-  .env-table td {
-    color: var(--color-text-secondary);
-  }
-  
-  .env-table td code {
-    font-size: 0.8125rem;
-  }
-  
-  .env-table tr:last-child td {
-    border-bottom: none;
-  }
-  
-  .env-table tbody tr:hover td {
-    background: var(--color-bg-elevated);
   }
   
   /* Policy Reference */
