@@ -20,7 +20,7 @@ A2A Warden is an open source Rust component that acts as an intermediary (hub-an
 
 ### Completed Task — Full audit trail and results
 
-![Completed Task — Full audit trail and results](assets/task-completed-details.png)
+![Completed Task — Full audit trail and results](site/public/assets/task-completed-details.png)
 
 ## Why A2A Warden
 
