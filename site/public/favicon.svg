@@ -1,16 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <!-- Fondo oscuro -->
+  <rect width="128" height="128" rx="30" fill="#0a0f1a" />
+  <!-- Flecha hacia arriba / A sin raya media (solo borde) -->
+  <path d="M34 106 L64 24 L94 106" fill="none" stroke="url(#warden-grad)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" />
   <defs>
     <linearGradient id="warden-grad" x1="0%" y1="100%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#4f83f1" />
       <stop offset="100%" stop-color="#a855f7" />
     </linearGradient>
   </defs>
-  <!-- Fondo oscuro -->
-  <rect width="128" height="128" rx="30" fill="#0a0f1a" />
-  <!-- Flecha hacia arriba / A sin raya media -->
-  <path d="M34 106 L64 24 L94 106" fill="none" stroke="url(#warden-grad)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
-  <!-- Punto en la punta (agente remoto) -->
-  <circle cx="64" cy="24" r="6" fill="#0a0f1a" stroke="url(#warden-grad)" stroke-width="2.5" />
-  <!-- Punto en la base (Warden / trust boundary) -->
-  <circle cx="64" cy="102" r="8" fill="#0a0f1a" stroke="url(#warden-grad)" stroke-width="3" />
 </svg>
