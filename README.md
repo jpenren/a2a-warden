@@ -16,6 +16,12 @@ A2A Warden is an open source Rust component that acts as an intermediary (hub-an
 - **Security**: Signed Agent Cards (JWS over JCS), token-guarded admin API, hash-chain integrity verification.
 - **Deployment**: SQLite or PostgreSQL, pinned Rust toolchain, configurable listen address, example agents and pizza-shop demo.
 
+## Screenshots
+
+### Completed Task — Full audit trail and results
+
+![Completed Task — Full audit trail and results](assets/task-completed-details.png)
+
 ## Why A2A Warden
 
 Agents built with different SDKs, languages, or LLM providers often cannot talk directly: protocols differ, authentication is missing, and an untrusted agent can send arbitrary messages. A2A Warden solves this by acting as a trusted intermediary (hub-and-spoke) where every message is recorded and can be replayed or resent with the correct `message_id`.

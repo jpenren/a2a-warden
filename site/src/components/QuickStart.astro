@@ -43,10 +43,12 @@ cargo build --release`,
   },
 ];
 
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+
 const screenshots = [
-  { src: "/a2a-warden/assets/tasks.png", alt: "Task list with pagination, status filters, and search", caption: "Task List — Pagination, filters, and debounced search" },
-  { src: "/a2a-warden/assets/task-details.png", alt: "Task details view with timeline and actions", caption: "Task Details — Timeline, actions, and metadata" },
-  { src: "/a2a-warden/assets/task-completed-details.png", alt: "Completed task with audit trail", caption: "Completed Task — Full audit trail and results" },
+  { src: `${base}assets/tasks.png`, alt: "Task list with pagination, status filters, and search", caption: "Task List — Pagination, filters, and debounced search" },
+  { src: `${base}assets/task-details.png`, alt: "Task details view with timeline and actions", caption: "Task Details — Timeline, actions, and metadata" },
+  { src: `${base}assets/task-completed-details.png`, alt: "Completed task with audit trail", caption: "Completed Task — Full audit trail and results" },
 ];
 
 const endpoints = [
@@ -81,7 +83,7 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
     <!-- Steps -->
     <div class="steps" aria-label="Installation steps">
       {steps.map((step, index) => (
-        <article class="step" style="animation-delay: {index * 150}ms">
+        <article class="step" style={`animation-delay: ${index * 150}ms`}>
           <div class="step-number">{step.number}</div>
           <div class="step-content">
             <h3 class="step-title">{step.title}</h3>
@@ -101,16 +103,27 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
     <div class="screenshots-section" aria-labelledby="screenshots-title">
       <h3 id="screenshots-title" class="screenshots-title">Embedded Web Console</h3>
       <p class="screenshots-hint">Click any screenshot to view full size</p>
-      <div class="screenshots-grid" role="list">
+      <div class="screenshots-grid">
         {screenshots.map((shot, index) => (
-          <figure class="screenshot-card" role="listitem" style="animation-delay: {index * 100}ms" data-lightbox data-src={shot.src} data-alt={shot.alt} data-caption={shot.caption}>
-            <div class="screenshot-frame">
-              <img src={shot.src} alt={shot.alt} loading="lazy" />
-              <div class="screenshot-overlay">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
-                <span>View full size</span>
-              </div>
-            </div>
+          <figure class="screenshot-card" style={`animation-delay: ${index * 100}ms`}>
+            <button
+              type="button"
+              class="screenshot-button"
+              data-lightbox
+              data-src={shot.src}
+              data-alt={shot.alt}
+              data-caption={shot.caption}
+              aria-label={`View ${shot.caption} full size`}
+              aria-haspopup="dialog"
+            >
+              <span class="screenshot-frame">
+                <img src={shot.src} alt={shot.alt} loading="lazy" decoding="async" />
+                <span class="screenshot-overlay" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
+                  <span>View full size</span>
+                </span>
+              </span>
+            </button>
             <figcaption>{shot.caption}</figcaption>
           </figure>
         ))}
@@ -130,7 +143,7 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
       <div class="lightbox-content">
-        <img id="lightbox-img" src="" alt="" />
+        <img id="lightbox-img" alt="" decoding="async" />
         <div class="lightbox-caption" id="lightbox-caption"></div>
       </div>
     </div>
@@ -155,18 +168,7 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
       <h3 id="demo-title" class="demo-title">Try the Demo</h3>
       <p class="demo-desc">Send a test task and approve it via the admin API:</p>
       <div class="code-block" data-lang="bash">
-        <pre><code>{`# Send a task (waits for approval due to deny-by-default policy)
-python3 examples/sample-agents/client-python/client_python.py \
-  --warden http://127.0.0.1:8080 --text "hello from the demo"
-
-# Get pending approval ID
-APPROVAL=$(curl -s "http://127.0.0.1:8080/api/v1/admin/approvals?status=pending" \
-  | python3 -c "import json,sys; print(json.load(sys.stdin)['approvals'][0]['id'])")
-
-# Approve the task
-curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision" \
-  -H 'content-type: application/json' \
-  -d '{"decision": "approve", "approver": "demo-user", "reason": "looks fine"}'`}</code></pre>
+        <pre><code>{demoCode}</code></pre>
         <button class="copy-btn" aria-label="Copy demo commands" data-code={demoCode}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         </button>
@@ -259,31 +261,59 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
   
   .screenshots-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-lg);
   }
   
   .screenshot-card {
+    margin: 0;
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    transition: all var(--transition-base);
+    transition: border-color var(--transition-base), transform var(--transition-base),
+      box-shadow var(--transition-base);
+  }
+  
+  /* First screenshot gets a wide feature slot */
+  .screenshot-card:first-child {
+    grid-column: 1 / -1;
   }
   
   .screenshot-card:hover {
     border-color: var(--color-border-light);
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-lg);
   }
   
+  .screenshot-button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    cursor: zoom-in;
+  }
+  
+  .screenshot-button:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+  
   .screenshot-frame {
-    aspect-ratio: 16 / 10;
+    position: relative;
+    display: block;
+    aspect-ratio: 2527 / 1376;
     background: var(--color-bg);
     overflow: hidden;
   }
   
   .screenshot-frame img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -291,11 +321,11 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
   }
   
   .screenshot-card:hover .screenshot-frame img {
-    transform: scale(1.02);
+    transform: scale(1.015);
   }
   
   .screenshot-card figcaption {
-    padding: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
     font-size: 0.8125rem;
     color: var(--color-text-muted);
     text-align: center;
@@ -430,13 +460,15 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
   .screenshot-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(10, 15, 26, 0.7);
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
+    background: linear-gradient(180deg, rgba(10, 15, 26, 0.35), rgba(10, 15, 26, 0.75));
     opacity: 0;
+    pointer-events: none;
     transition: opacity var(--transition-base);
     color: white;
     font-size: 0.875rem;
@@ -449,12 +481,9 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
     stroke-width: 1.5;
   }
   
-  .screenshot-card:hover .screenshot-overlay {
+  .screenshot-card:hover .screenshot-overlay,
+  .screenshot-button:focus-visible .screenshot-overlay {
     opacity: 1;
-  }
-  
-  .screenshot-card[data-lightbox] {
-    cursor: zoom-in;
   }
   
   /* Lightbox */
@@ -539,7 +568,9 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
   }
   
   .lightbox-content {
-    max-width: 95vw;
+    position: relative;
+    z-index: 2;
+    max-width: min(1400px, 94vw);
     max-height: 90vh;
     display: flex;
     flex-direction: column;
@@ -548,9 +579,12 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
   }
   
   .lightbox-content img {
+    display: block;
     max-width: 100%;
     max-height: 80vh;
     border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
     box-shadow: var(--shadow-xl);
     object-fit: contain;
   }
@@ -580,15 +614,14 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
   document.querySelectorAll('.copy-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const code = btn.dataset.code;
+      const originalHTML = btn.innerHTML;
       try {
         await navigator.clipboard.writeText(code);
-        const svg = btn.querySelector('svg');
-        const originalHTML = btn.innerHTML;
         btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
-        btn.style.color = 'var(--color-success)';
+        btn.classList.add('copied');
         setTimeout(() => {
           btn.innerHTML = originalHTML;
-          btn.style.color = '';
+          btn.classList.remove('copied');
         }, 1500);
       } catch (e) {
         console.error('Failed to copy:', e);
@@ -602,9 +635,12 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
     const lightboxImg = document.getElementById('lightbox-img');
     const lightboxCaption = document.getElementById('lightbox-caption');
     const screenshots = Array.from(document.querySelectorAll('[data-lightbox]'));
+    const closeButton = lightbox.querySelector('.lightbox-close');
     let currentIndex = 0;
+    let lastFocused = null;
     
     function openLightbox(index) {
+      if (lightbox.hidden) lastFocused = document.activeElement;
       currentIndex = index;
       const shot = screenshots[currentIndex];
       lightboxImg.src = shot.dataset.src;
@@ -612,14 +648,15 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
       lightboxCaption.textContent = shot.dataset.caption;
       lightbox.hidden = false;
       document.body.style.overflow = 'hidden';
-      updateNavButtons();
+      closeButton?.focus();
     }
     
     function closeLightbox() {
       lightbox.hidden = true;
-      lightboxImg.src = '';
+      lightboxImg.removeAttribute('src');
       lightboxCaption.textContent = '';
       document.body.style.overflow = '';
+      if (lastFocused instanceof HTMLElement) lastFocused.focus();
     }
     
     function navigate(direction) {
@@ -627,22 +664,9 @@ curl -s -X POST "http://127.0.0.1:8080/api/v1/admin/approvals/$APPROVAL/decision
       openLightbox(currentIndex);
     }
     
-    function updateNavButtons() {
-      // Always show nav buttons for multiple screenshots
-    }
-    
     // Click on screenshot cards
     screenshots.forEach((shot, index) => {
       shot.addEventListener('click', () => openLightbox(index));
-      shot.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          openLightbox(index);
-        }
-      });
-      shot.setAttribute('tabindex', '0');
-      shot.setAttribute('role', 'button');
-      shot.setAttribute('aria-label', `View ${shot.dataset.caption} full size`);
     });
     
     // Close buttons

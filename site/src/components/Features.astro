@@ -92,8 +92,8 @@ const icons = {
     
     <div class="grid grid--auto" role="list">
       {features.map((feature, index) => (
-        <article class="card" role="listitem" style="animation-delay: {index * 100}ms">
-          <div class="card-icon" style="background: var(--color-{feature.color}-bg); color: var(--color-{feature.color}); border: 1px solid var(--color-{feature.color}-border);" set:html={icons[feature.icon]} />
+        <article class="card" role="listitem" style={`animation-delay: ${index * 100}ms`}>
+          <div class="card-icon" style={`background: var(--color-${feature.color}-bg); color: var(--color-${feature.color}); border: 1px solid var(--color-${feature.color}-border);`} set:html={icons[feature.icon]} />
           <h3 class="card-title">{feature.title}</h3>
           <p class="card-description">{feature.description}</p>
           <div class="card-tags" style="margin-top: var(--space-lg); display: flex; flex-wrap: wrap; gap: var(--space-sm);">
