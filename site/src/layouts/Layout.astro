@@ -42,10 +42,10 @@ const ogImageURL = new URL(ogImage, new URL(base, site));
   <meta property="twitter:description" content={description} />
   <meta property="twitter:image" content={ogImageURL} />
   
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+  <!-- Favicon (custom A2A Warden logo) -->
+  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg?v=1`} />
   <link rel="icon" type="image/x-icon" href={`${base}favicon.ico`} />
-  <link rel="apple-touch-icon" href={`${base}favicon.ico`} />
+  <link rel="apple-touch-icon" href={`${base}favicon.svg?v=1`} />
   
   <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
