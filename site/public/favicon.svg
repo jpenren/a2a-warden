@@ -7,10 +7,10 @@
   </defs>
   <!-- Fondo oscuro -->
   <rect width="128" height="128" rx="30" fill="#0a0f1a" />
-  <!-- Triángulo ancho hacia arriba (estilo Astro, más proporcionado) -->
-  <path d="M30 106 L64 22 L98 106 Z" fill="url(#warden-grad)" />
-  <!-- Línea central vertical sutil -->
-  <path d="M64 22 L64 106" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.5" />
-  <!-- Punto central (warde/trust boundary) -->
-  <circle cx="64" cy="64" r="9" fill="#0a0f1a" stroke="url(#warden-grad)" stroke-width="3" />
+  <!-- Flecha hacia arriba / A sin raya media -->
+  <path d="M34 106 L64 24 L94 106" fill="none" stroke="url(#warden-grad)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Punto en la punta (agente remoto) -->
+  <circle cx="64" cy="24" r="6" fill="#0a0f1a" stroke="url(#warden-grad)" stroke-width="2.5" />
+  <!-- Punto en la base (Warden / trust boundary) -->
+  <circle cx="64" cy="102" r="8" fill="#0a0f1a" stroke="url(#warden-grad)" stroke-width="3" />
 </svg>
