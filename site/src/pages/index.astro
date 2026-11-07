@@ -18,12 +18,17 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     <div class="container">
       <nav class="nav" aria-label="Main navigation">
         <a href={base} class="nav-logo" aria-label="A2A Warden Home">
-          <svg width="28" height="28" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" stroke="var(--color-accent)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M44 110 L64 22 L84 110" fill="none" />
-            <path d="M52 66 L76 66" fill="none" />
-            <circle cx="64" cy="22" r="6" fill="none" stroke="var(--color-accent)" stroke-width="2.5" />
-            <circle cx="44" cy="110" r="6" fill="none" stroke="var(--color-accent)" stroke-width="2.5" />
-            <circle cx="84" cy="110" r="6" fill="none" stroke="var(--color-accent)" stroke-width="2.5" />
+          <svg width="28" height="28" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="warden-grad-nav" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#4f83f1" />
+                <stop offset="100%" stop-color="#a855f7" />
+              </linearGradient>
+            </defs>
+            <rect width="128" height="128" rx="30" fill="#0a0f1a" />
+            <path d="M30 106 L64 22 L98 106 Z" fill="url(#warden-grad-nav)" />
+            <path d="M64 22 L64 106" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.5" />
+            <circle cx="64" cy="64" r="9" fill="#0a0f1a" stroke="url(#warden-grad-nav)" stroke-width="3" />
           </svg>
           <span class="nav-name">A2A Warden</span>
         </a>
